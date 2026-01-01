@@ -1,0 +1,642 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'MiSans', 'Noto Sans SC', sans-serif;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+    color: #ffffff;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Online User Count */
+#online-count-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#online-count-container.collapsed {
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#online-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.3s ease, width 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#online-count-container.collapsed #online-details {
+    width: 0;
+    opacity: 0;
+    margin: 0;
+}
+
+.control-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover,
+#toggle-online-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+@media (max-width: 768px) {
+    .mobile-hide {
+        display: none;
+    }
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    /* Green for online */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #4ade80;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+    }
+}
+
+/* Countdown Container */
+#countdown-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Year Animation Styles */
+.year-container {
+    position: relative;
+    height: 160px;
+    /* Increased height to prevent cutting off */
+    /* overflow: hidden; Removed hidden to ensure glow is visible, or keep it if layout breaks. Let's keep it but larger. */
+    overflow: visible;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    z-index: 20;
+    /* Ensure on top */
+}
+
+.year {
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #e2e8f0;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    position: absolute;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.year.old {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+}
+
+.year.new {
+    transform: translateY(100%) scale(0.8);
+    opacity: 0;
+    filter: blur(10px);
+    color: #fbbf24;
+    /* Gold for the new year */
+    text-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+}
+
+/* State: Switched */
+.year-container.switched .year.old {
+    transform: translateY(-150%) rotateX(45deg);
+    opacity: 0;
+    filter: blur(10px);
+}
+
+.year-container.switched .year.new {
+    transform: translateY(0) scale(1.1);
+    opacity: 1;
+    filter: blur(0);
+}
+
+/* Timer Styles */
+#timer {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+}
+
+.time-box span {
+    display: block;
+}
+
+.time-box span:first-child {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.time-box .label {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+/* Hidden Message */
+.hidden {
+    display: none;
+    opacity: 0;
+}
+
+#message {
+    font-size: 5rem;
+    font-weight: 700;
+    color: #fbbf24;
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+    }
+
+    to {
+        text-shadow: 0 0 30px rgba(251, 191, 36, 1), 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Fireworks Canvas */
+#fireworks-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Behind content mostly, but text is strictly z-index 10 */
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .year {
+        font-size: 4rem;
+        /* Smaller font for mobile */
+    }
+
+    #timer {
+        gap: 0.8rem;
+    }
+
+    .time-box {
+        padding: 0.8rem 1rem;
+        min-width: 70px;
+    }
+
+    .time-box span:first-child {
+        font-size: 2rem;
+    }
+
+    .time-box .label {
+        font-size: 0.8rem;
+    }
+
+    #message {
+        font-size: 3rem;
+    }
+}
+
+/* Mobile Landscape Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+    .year-container {
+        height: 100px;
+        margin-bottom: 0.5rem;
+    }
+
+    .year {
+        font-size: 3.5rem;
+    }
+
+    #countdown-container {
+        gap: 0.5rem;
+    }
+
+    .time-box {
+        padding: 0.5rem 1rem;
+        min-width: 60px;
+    }
+
+    .time-box span:first-child {
+        font-size: 1.8rem;
+    }
+
+    .time-box .label {
+        font-size: 0.7rem;
+    }
+
+    #online-count-container {
+        transform: scale(0.8);
+        transform-origin: top right;
+        top: 10px;
+        right: 10px;
+    }
+
+    .control-btn {
+        transform: scale(0.8);
+        transform-origin: top left;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.modal-content {
+    background: rgba(30, 30, 40, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.modal-subtitle,
+.modal-desc {
+    color: #a0a0b0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Input Group */
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #fbbf24;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#music-search-btn {
+    background: #fbbf24;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 0 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#music-search-btn:active {
+    transform: scale(0.95);
+}
+
+/* Music List */
+.music-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    display: grid;
+    gap: 10px;
+}
+
+.music-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.music-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.music-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.music-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.music-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-artist {
+    font-size: 0.8rem;
+    color: #a0a0b0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Climax Config */
+.selected-song-preview {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 191, 36, 0.3);
+}
+
+.selected-song-preview img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+}
+
+.selected-song-preview .song-info {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+#selected-title {
+    font-weight: bold;
+    color: #fbbf24;
+}
+
+#selected-artist {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.time-input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.time-input-group input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    width: 80px;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.time-input-group span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #000;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    transition: all 0.2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5);
+}
+
+.secondary-btn,
+.close-modal-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.secondary-btn:hover,
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    90% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}

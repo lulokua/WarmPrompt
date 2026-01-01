@@ -1,0 +1,912 @@
+:root {
+    --left-bg: #0a0a0a;
+    /* 深黑 */
+    --left-text: #ffffff;
+    --left-accent: #2de2e6;
+    /* 赛博青 */
+
+    --right-bg: #f0f0f0;
+    /* 纯白/灰白 */
+    --right-text: #1a1a1a;
+    --right-accent: #ff2a6d;
+    /* 霓虹红 */
+
+    --footer-bg: #050505;
+    /* 页脚背景色 */
+
+    /* 显式定义 MiSans */
+    --font-primary: 'MiSans', sans-serif;
+    --font-serif: 'Noto Serif SC', serif;
+
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* 弹性缓动 */
+    --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+    /* 丝滑缓动 */
+
+    /* Loading 页面变量 */
+    --bg-color: #050505;
+    --accent-glow: linear-gradient(135deg, #00C6FB 0%, #005BEA 100%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* font-family: 'MiSans', sans-serif;  - Tailwind overrides this, handled in body */
+}
+
+html,
+body {
+    width: 100%;
+    /* overflow-x: hidden; */
+    /* Let loading screen handle overflow */
+}
+
+body {
+    /* background-color: var(--left-bg); */
+    /* Handled by specific sections */
+    font-family: 'MiSans', sans-serif;
+    /* Default for the main app */
+}
+
+/* =========================================
+   PART 1: LOADING SCREEN STYLES
+   ========================================= */
+
+#loading-screen {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: var(--bg-color);
+    color: #fff;
+    /* overflow: hidden; */
+    /* Controlled by container */
+}
+
+/* 1. 胶片噪点质感 (Film Grain) */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 2. 液态光球 (Liquid Orb) */
+.orb-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    z-index: 0;
+    animation: rotate 20s linear infinite;
+}
+
+.liquid-orb {
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(from 180deg at 50% 50%, #FF2E63 0deg, #08D9D6 72deg, #252A34 144deg, #EAEAEA 216deg, #FF2E63 360deg);
+    background: linear-gradient(45deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    filter: blur(60px);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    animation: morph 8s ease-in-out infinite alternate, breathe 5s ease-in-out infinite alternate;
+    opacity: 0.8;
+}
+
+@keyframes morph {
+    0% {
+        border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+    }
+
+    100% {
+        border-radius: 40% 60%;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+        filter: blur(55px);
+    }
+
+    100% {
+        transform: scale(1.25);
+        opacity: 0.9;
+        filter: blur(65px);
+    }
+}
+
+/* 3. 前景磨砂玻璃 (Frosted Glass) */
+.glass-foreground {
+    position: relative;
+    z-index: 10;
+    background: rgba(5, 5, 5, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* 4. 进度条动画 */
+.progress-line {
+    width: 0%;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* 5. Logo 高级处理 */
+.sponsor-img {
+    opacity: 0.85;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: brightness(1.1);
+}
+
+.sponsor-group:hover .sponsor-img {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+/* 文字出现动画 */
+.reveal-text {
+    animation: reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+@keyframes reveal {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* =========================================
+   PART 2: MAIN APP ORIGINAL STYLES
+   ========================================= */
+
+/* Use #main-app-container to scope if necessary, but original selector specificity is high */
+
+/* 首屏容器：占满一屏 */
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    /* 强制占满视口高度 */
+    display: flex;
+    transition: filter 0.5s ease;
+}
+
+
+/* 分屏基础样式 */
+.split {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: width 0.8s var(--ease-smooth);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%;
+}
+
+.left {
+    background-color: var(--left-bg);
+    color: var(--left-text);
+}
+
+.left .title .dot {
+    color: var(--left-accent);
+}
+
+.left .btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.left .btn:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+.right {
+    background-color: var(--right-bg);
+    color: var(--right-text);
+}
+
+.right .title .dot {
+    color: var(--right-accent);
+}
+
+.right .btn {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #000;
+}
+
+.right .btn:hover {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.container:hover .split {
+    width: 40%;
+    opacity: 0.7;
+    filter: blur(2px);
+}
+
+.container .split:hover {
+    width: 60%;
+    opacity: 1;
+    filter: blur(0);
+}
+
+.content {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    transform: translateY(20px);
+    transition: transform 0.8s var(--ease-smooth);
+}
+
+.split:hover .content {
+    transform: translateY(0);
+}
+
+.label {
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.title {
+    /* Note: Tailwind might override h1 sizes, check this */
+    font-family: 'MiSans', sans-serif;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    white-space: nowrap;
+}
+
+.description {
+    font-weight: 400;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin-bottom: 3rem;
+}
+
+.btn {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    border-radius: 0;
+    /* Reset tailwind if any */
+}
+
+.btn .arrow {
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .arrow {
+    transform: translateX(5px);
+}
+
+.btn.small {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.btn.small:hover {
+    opacity: 1;
+}
+
+/* Disabled Button Style */
+.btn.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.1);
+    background: transparent;
+}
+
+.btn.is-disabled:hover {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: none;
+}
+
+.btn.is-disabled .arrow {
+    transform: none !important;
+}
+
+.bg-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    transition: transform 1s var(--ease-smooth);
+}
+
+.shape-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--left-accent);
+    bottom: -200px;
+    left: -200px;
+}
+
+.shape-2 {
+    width: 700px;
+    height: 700px;
+    background: var(--right-accent);
+    top: -200px;
+    right: -200px;
+}
+
+.split:hover .shape {
+    transform: scale(1.2);
+    opacity: 0.6;
+}
+
+#fireworks-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+/* --- 全新页脚区域 (Page Footer) --- */
+.page-footer {
+    position: relative;
+    width: 100%;
+    background-color: var(--footer-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6rem 5%;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+/* 左侧：技术规格组 */
+.tech-spec {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    /* 回退到等宽字体 */
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.spec-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: color 0.3s ease;
+}
+
+.spec-group:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.spec-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 2px;
+}
+
+.spec-value {
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.code-font {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.spec-divider {
+    width: 1px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: rotate(15deg);
+}
+
+/* 状态呼吸灯 */
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #00ff88;
+    /* 极客绿 */
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ff88;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+        box-shadow: 0 0 12px #00ff88;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+/* 右侧：署名区块 */
+.signature-block {
+    text-align: right;
+}
+
+.made-by {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.author-name {
+    font-family: var(--font-serif);
+    /* 使用衬线体营造高级感 */
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(90deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.copyright {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 1px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+
+    /* --- 首屏适配 --- */
+    .container {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .split {
+        width: 100%;
+        height: 50%;
+        padding: 1.5rem;
+    }
+
+    .container:hover .split,
+    .container .split:hover {
+        height: 50%;
+        width: 100%;
+    }
+
+    .title {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    /* --- 页脚精细化适配 --- */
+    .page-footer {
+        padding: 4rem 2rem;
+        /* 增加水平内边距 */
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+        /* 略微收紧间距 */
+        text-align: center;
+        width: 100%;
+    }
+
+    /* 技术参数：移动端改为紧凑网格或流式布局 */
+    .tech-spec {
+        flex-direction: column;
+        gap: 1.25rem;
+        width: 100%;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        /* 增加极细分割线 */
+    }
+
+    .spec-group {
+        align-items: center;
+        /* 确保子元素居中 */
+    }
+
+    .spec-label {
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+    }
+
+    .spec-value {
+        font-size: 0.8rem;
+        /* 略微放大字体以提升阅读体验 */
+    }
+
+    .spec-divider {
+        display: none;
+        /* 移动端不需要斜线分割 */
+    }
+
+    /* 署名区块 */
+    .signature-block {
+        text-align: center;
+        width: 100%;
+    }
+
+    .author-name {
+        font-size: 1.8rem;
+        /* 移动端名字更醒目 */
+    }
+}
+
+/* --- 灵动客服胶囊系统 (Dynamic Support Capsule) --- */
+
+/* 1. 背景虚化遮罩 */
+.support-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(0px);
+    /* 初始无模糊 */
+    -webkit-backdrop-filter: blur(0px);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    /* 初始不阻挡点击 */
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* 更慢、更优雅的缓动 */
+}
+
+.support-backdrop.is-active {
+    opacity: 1;
+    backdrop-filter: blur(15px);
+    /* 激活时深度模糊 */
+    -webkit-backdrop-filter: blur(15px);
+    pointer-events: auto;
+}
+
+/* 2. 胶囊容器 */
+.support-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 999;
+    width: 140px;
+    height: 48px;
+    border-radius: 24px;
+    background: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+    /* 极致丝滑的旗舰级动效 */
+    color: #fff;
+}
+
+.support-widget:hover {
+    /* transform: scale(1.02);  Removed to prevent conflict with closing animation (translate vs scale interpolation) */
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 3. 激活状态 (变为长胶囊/面板) */
+.support-widget.is-expanded {
+    width: 380px;
+    height: 500px;
+    border-radius: 20px;
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);
+    /* 移动到屏幕中心 */
+    background: #0f0f0f;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    cursor: default;
+}
+
+/* 4. 胶囊初始内容 (Trigger) */
+.capsule-trigger {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    /* 让点击穿透到父容器 */
+}
+
+.support-widget.is-expanded .capsule-trigger {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.capsule-trigger .icon {
+    color: #00ff88;
+    font-size: 0.6rem;
+    animation: blink 2s infinite;
+}
+
+/* 5. 展开后内容 (Content) */
+.capsule-content {
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    transition: all 0.5s ease 0.4s;
+    /* 延迟 0.4s 显示，等待胶囊展开大部分 */
+}
+
+.support-widget.is-expanded .capsule-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 聊天界面样式 */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-header .status {
+    font-size: 0.7rem;
+    font-family: 'Consolas', monospace;
+    color: #00ff88;
+    letter-spacing: 1px;
+}
+
+.chat-header .close-btn {
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #666;
+    transition: color 0.3s;
+}
+
+.chat-header .close-btn:hover {
+    color: #fff;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.message.system {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 12px;
+    border-top-left-radius: 2px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 0.8rem;
+    animation: messageSlideIn 0.3s ease;
+}
+
+/* 用户消息样式 */
+.message.user {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+    padding: 1rem;
+    border-radius: 12px;
+    border-top-right-radius: 2px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #000;
+    margin-left: 20%;
+    margin-bottom: 0.8rem;
+    animation: messageSlideIn 0.3s ease;
+}
+
+/* 消息滑入动画 */
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 加载点动画 */
+.message.loading {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1.2rem;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: dotPulse 1.4s infinite;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.chat-input-area {
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+    position: relative;
+}
+
+.chat-input-area input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    color: #fff;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.chat-input-area input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.chat-input-area .send-btn {
+    background: #fff;
+    color: #000;
+    border: none;
+    width: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.chat-input-area .send-btn:hover {
+    transform: scale(1.05);
+}
+
+/* 移动端胶囊适配 */
+@media (max-width: 768px) {
+    .support-widget {
+        right: 50%;
+        transform: translateX(50%);
+        /* 居中 */
+        bottom: 1.5rem;
+    }
+
+    .support-widget.is-expanded {
+        width: 90%;
+        height: 60vh;
+        bottom: 50%;
+        right: 50%;
+        transform: translate(50%, 50%);
+    }
+}

@@ -1,0 +1,80 @@
+/* =========================================
+   POPUP.CSS - Square gift popups
+   ========================================= */
+
+.popup {
+    position: fixed;
+    width: 180px;
+    max-width: calc(100vw - 24px);
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    user-select: none;
+    word-wrap: break-word;
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    z-index: 10000;
+    backdrop-filter: blur(var(--popup-blur, 12px));
+    -webkit-backdrop-filter: blur(var(--popup-blur, 12px));
+    background: var(--popup-bg, rgba(255, 255, 255, 0.22));
+    color: var(--popup-text, #ffffff);
+    border: 1px solid var(--popup-border, rgba(255, 255, 255, 0.18));
+    touch-action: manipulation;
+}
+
+.popup.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: popupFloat 3s ease-in-out infinite;
+}
+
+@keyframes popupFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.popup-square {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 12px 12px;
+    gap: 6px;
+}
+
+.popup-name-tag {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.85;
+    text-align: center;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: var(--popup-tag-bg, rgba(255, 255, 255, 0.18));
+    display: inline-block;
+    width: fit-content;
+}
+
+.popup-text {
+    line-height: 1.2;
+    text-align: center;
+    font-size: inherit;
+    width: 100%;
+    white-space: pre-line;
+}
+
+@media (max-width: 480px) {
+    .popup {
+        width: 160px;
+    }
+}

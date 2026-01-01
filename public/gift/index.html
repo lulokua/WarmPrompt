@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>你收到了一份礼物</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/For_Others/CSS/base.css">
+    <link rel="stylesheet" href="/For_Others/CSS/final.css">
+    <link rel="stylesheet" href="/For_Others/CSS/reveal.css">
+    <link rel="stylesheet" href="/For_Others/CSS/letter.css">
+    <link rel="stylesheet" href="/For_Others/CSS/popup.css">
+    <style>
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-1, #4facfe);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Error Screen */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error-screen.active {
+            display: flex;
+        }
+
+        .error-icon {
+            width: 64px;
+            height: 64px;
+            color: #ff6b6b;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .error-message {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+        }
+
+        .error-btn {
+            background: var(--accent-1, #4facfe);
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 99px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .error-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">正在加载礼物...</p>
+    </div>
+
+    <!-- Error Screen -->
+    <div class="error-screen" id="errorScreen">
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h2 class="error-title">礼物不存在</h2>
+        <p class="error-message" id="errorMessage">该礼物可能已过期或链接无效</p>
+        <button class="error-btn" onclick="window.location.href='/'">返回首页</button>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="noise-overlay"></div>
+    <video id="bgVideoLayer" autoplay loop muted playsinline class="bg-video-layer"></video>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+
+    <!-- Final Preview Overlay (Initial Card) -->
+    <div class="final-preview-container" id="finalPreviewOverlay">
+        <div class="final-card">
+            <h2 class="time-greeting" id="finalTimeGreeting">你好</h2>
+            <h1 class="recipient-name" id="finalRecipientName">朋友</h1>
+
+            <div class="gift-icons-row" id="finalGiftIcons">
+                <!-- Icons injected by JS -->
+            </div>
+
+            <div class="elegant-divider"></div>
+
+            <p class="gift-message" id="finalGiftMessage">
+                正在加载...
+            </p>
+
+            <div class="swipe-hint-container" id="finalSwipeHint">
+                <div class="swipe-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M5 15l7-7 7 7" />
+                        <path d="M5 21l7-7 7 7" />
+                    </svg>
+                </div>
+                <span class="swipe-text">向上滑动打开</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift Reveal Layer (Music Player) -->
+    <div class="reveal-container" id="giftRevealContainer">
+        <div class="reveal-header">Sent with a melody</div>
+
+        <div class="music-immersive-card">
+            <div class="vinyl-wrapper">
+                <div class="vinyl-center-hole"></div>
+                <img id="revealAlbumArt" class="vinyl-art" src="" alt="Album Art">
+            </div>
+
+            <div class="track-info-large">
+                <h2 id="revealTitle" class="track-title-large">Song Title</h2>
+                <p id="revealArtist" class="track-artist-large">Artist Name</p>
+            </div>
+
+            <div class="immersive-controls">
+                <div class="time-row">
+                    <span id="revealCurrentTime">00:00</span>
+                    <span id="revealTotalTime">00:00</span>
+                </div>
+                <div class="progress-container" id="revealProgressContainer">
+                    <div class="progress-bar" id="revealProgressBar"></div>
+                </div>
+                <button class="play-btn-large" id="revealPlayBtn">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="swipe-hint-container" id="revealSwipeHint">
+            <div class="swipe-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 15l7-7 7 7" />
+                    <path d="M5 21l7-7 7 7" />
+                </svg>
+            </div>
+            <span class="hint-text" id="revealNextText">向上滑动继续</span>
+        </div>
+    </div>
+
+    <!-- Letter Overlay -->
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter-card">
+            <div class="letter-highlight">To: <span id="letterRecipient">Friend</span></div>
+            <div class="letter-body" id="letterBodyText">
+                这里是信件内容...
+            </div>
+            <div class="letter-footer">
+                From: <span id="letterSender">Me</span>
+            </div>
+        </div>
+
+        <div class="swipe-hint-container" id="letterSwipeHint"
+            style="position:relative; margin-top: 30px; bottom: auto;">
+            <div class="swipe-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 15l7-7 7 7" />
+                    <path d="M5 21l7-7 7 7" />
+                </svg>
+            </div>
+            <span class="hint-text">向上滑动收起</span>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="musicAudio" style="display:none;"></audio>
+
+    <script src="/gift/gift.js"></script>
+</body>
+
+</html>

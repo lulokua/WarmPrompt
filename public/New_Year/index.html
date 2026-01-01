@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年倒计时</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=MiSans&family=Noto+Sans+SC:wght@300;400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <button id="fullscreen-btn" class="control-btn" aria-label="全屏">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+            </path>
+        </svg>
+    </button>
+
+    <div id="online-count-container">
+        <div id="online-details">
+            <span class="dot"></span> 当前 <span id="online-count">...</span> 人 <span class="mobile-hide">正在跨年</span>
+        </div>
+        <button id="toggle-online-btn" class="icon-btn" aria-label="切换人数显示">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    <div id="countdown-container">
+        <!-- <h1>距离 2026 新年还有</h1> -->
+        <div class="year-container">
+            <span class="year old">2025</span>
+            <span class="year new">2026</span>
+        </div>
+        <div id="timer">
+            <div class="time-box">
+                <span id="days">00</span>
+                <span class="label">天</span>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <span class="label">时</span>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <span class="label">分</span>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <span class="label">秒</span>
+            </div>
+        </div>
+        <div id="message" class="hidden">新年快乐!</div>
+    </div>
+
+    <canvas id="fireworks-canvas"></canvas>
+
+    <audio id="bg-music" preload="auto"></audio>
+
+    <!-- Music Selection Modal -->
+    <div id="music-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>🎵 选择您的跨年 BGM</h2>
+            <p class="modal-subtitle">搜索 QQ 音乐，为跨年时刻伴奏</p>
+            <div class="input-group">
+                <input type="text" id="music-search-input" placeholder="输入歌名或歌手 e.g. 新年快乐">
+                <button id="music-search-btn">搜索</button>
+            </div>
+            <div id="music-results" class="music-list"></div>
+            <button class="close-modal-btn" id="skip-music-btn">跳过（静音）</button>
+        </div>
+    </div>
+
+    <!-- Climax Configuration Modal -->
+    <div id="climax-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>⚡ 高潮卡点设置</h2>
+            <p>这首歌的高潮/副歌部分在哪一秒？</p>
+            <p class="modal-desc">我们将自动计算播放时间，让高潮部分精准命中 00:00:00 🎆</p>
+
+            <div class="selected-song-preview">
+                <img id="selected-cover" src="" alt="cover">
+                <div class="song-info">
+                    <span id="selected-title">Song Title</span>
+                    <span id="selected-artist">Artist</span>
+                </div>
+            </div>
+
+            <div class="time-input-group">
+                <input type="number" id="climax-min" placeholder="分" min="0" max="10">
+                <span>:</span>
+                <input type="number" id="climax-sec" placeholder="秒" min="0" max="59">
+            </div>
+            <p class="hint">例如：高潮在 1分30秒，输入 1:30</p>
+
+            <div class="modal-actions">
+                <button id="confirm-climax-btn" class="primary-btn">我是卡点大师 (开启)</button>
+                <button id="no-climax-btn" class="secondary-btn">普通播放</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

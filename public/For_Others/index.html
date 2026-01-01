@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>欢迎</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/base.css">
+    <link rel="stylesheet" href="CSS/form.css">
+    <link rel="stylesheet" href="CSS/music.css">
+    <link rel="stylesheet" href="CSS/modal.css">
+    <link rel="stylesheet" href="CSS/final.css">
+    <link rel="stylesheet" href="CSS/reveal.css">
+    <link rel="stylesheet" href="CSS/letter.css">
+    <link rel="stylesheet" href="CSS/popup.css">
+</head>
+
+<body>
+
+    <!-- Final Preview Overlay (Added per request) -->
+    <div class="final-preview-container" id="finalPreviewOverlay">
+        <div class="final-card">
+            <h2 class="time-greeting" id="finalTimeGreeting">Good Morning</h2>
+            <h1 class="recipient-name" id="finalRecipientName">Name</h1>
+
+            <div class="gift-icons-row" id="finalGiftIcons">
+                <!-- Icons injected by JS -->
+            </div>
+
+            <div class="elegant-divider"></div>
+
+            <p class="gift-message" id="finalGiftMessage">
+                Message text goes here.
+            </p>
+
+            <!-- Replaced Button with Swipe Hint -->
+            <div class="swipe-hint-container" id="finalSwipeHint">
+                <div class="swipe-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M5 15l7-7 7 7" />
+                        <path d="M5 21l7-7 7 7" /> <!-- Double arrow for emphasis -->
+                    </svg>
+                </div>
+                <span class="swipe-text">向上滑动打开</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 固定在右下角的提交按钮 -->
+    <div class="final-action-buttons">
+        <button class="final-btn submit-btn" id="finalSubmitBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>提交礼物</span>
+        </button>
+    </div>
+
+    <!-- Letter Overlay (Added) -->
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter-card">
+            <div class="letter-highlight">To: <span id="letterRecipient">Friend</span></div>
+            <div class="letter-body" id="letterBodyText">
+                这里是信件内容...
+            </div>
+            <div class="letter-footer">
+                From: <span id="letterSender">Me</span>
+            </div>
+        </div>
+
+        <!-- Swipe Hint for Letter -->
+        <div class="swipe-hint-container" id="letterSwipeHint"
+            style="position:relative; margin-top: 30px; bottom: auto;">
+            <div class="swipe-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 15l7-7 7 7" />
+                    <path d="M5 21l7-7 7 7" />
+                </svg>
+            </div>
+            <span class="hint-text">向上滑动收起</span>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="noise-overlay"></div>
+    <video id="bgVideoLayer" autoplay loop muted playsinline class="bg-video-layer"></video>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+
+    <!-- CC Attack Warning Overlay -->
+    <div class="cc-attack-overlay" id="ccAttackOverlay">
+        <div class="cc-attack-content">
+            <div class="cc-attack-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h1 class="cc-attack-title">404</h1>
+            <h2 class="cc-attack-subtitle">访问被拒绝</h2>
+            <p class="cc-attack-message">搜索过多，识别为CC攻击</p>
+            <p class="cc-attack-timer">您的IP已被暂时封禁，请在 <span id="ccCountdown">10</span> 分钟后重试</p>
+        </div>
+    </div>
+
+    <!-- Gift Reveal Layer (Immersive Music Player) -->
+    <div class="reveal-container" id="giftRevealContainer">
+        <div class="reveal-header">Sent with a melody</div>
+
+        <div class="music-immersive-card">
+            <div class="vinyl-wrapper">
+                <div class="vinyl-center-hole"></div>
+                <img id="revealAlbumArt" class="vinyl-art" src="" alt="Album Art">
+            </div>
+
+            <div class="track-info-large">
+                <h2 id="revealTitle" class="track-title-large">Song Title</h2>
+                <p id="revealArtist" class="track-artist-large">Artist Name</p>
+            </div>
+
+            <div class="immersive-controls">
+                <div class="time-row">
+                    <span id="revealCurrentTime">00:00</span>
+                    <span id="revealTotalTime">00:00</span>
+                </div>
+                <div class="progress-container" id="revealProgressContainer">
+                    <div class="progress-bar" id="revealProgressBar"></div>
+                </div>
+                <button class="play-btn-large" id="revealPlayBtn">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Next Step Hint -->
+        <!-- Next Step Swipe Hint -->
+        <div class="swipe-hint-container" id="revealSwipeHint">
+            <div class="swipe-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 15l7-7 7 7" />
+                    <path d="M5 21l7-7 7 7" />
+                </svg>
+            </div>
+            <span class="hint-text" id="revealNextText">向上滑动继续</span>
+        </div>
+    </div>
+
+    <!-- Input Form Container -->
+    <div class="container" id="main-container">
+        <h1 id="questionTitle">你好<br> <span class="italic" id="questionSubtitle">请问怎么称呼？</span></h1>
+
+        <div class="input-wrapper">
+            <input type="text" id="nameInput" placeholder="输入你的名字" autocomplete="off" spellcheck="false" maxlength="6">
+
+            <!-- Color Picker (Hidden by default) -->
+            <!-- Color Picker (Hidden by default) -->
+            <div class="color-picker-container" id="colorPicker">
+                <!-- Row 1 -->
+                <div class="color-btn selected" data-color="#4facfe" style="--btn-color: #4facfe;" title="海洋蓝"></div>
+                <div class="color-btn" data-color="#ff0099" style="--btn-color: #ff0099;" title="霓虹粉"></div>
+                <div class="color-btn" data-color="#f9d423" style="--btn-color: #f9d423;" title="落日黄"></div>
+                <div class="color-btn" data-color="#00b09b" style="--btn-color: #00b09b;" title="翡萃绿"></div>
+
+                <!-- Row 2 -->
+                <div class="color-btn" data-color="#ffffff" style="--btn-color: #ffffff;" title="纯净白"></div>
+                <div class="color-btn" data-color="#ff416c" style="--btn-color: #ff416c;" title="珊瑚红"></div>
+                <div class="color-btn" data-color="#8e2de2" style="--btn-color: #8e2de2;" title="星云紫"></div>
+                <div class="color-btn" data-color="#f37335" style="--btn-color: #f37335;" title="活力橙"></div>
+
+                <!-- Row 3 (New) -->
+                <div class="color-btn" data-color="#30cfd0" style="--btn-color: #30cfd0;" title="极光青"></div>
+                <div class="color-btn" data-color="#667eea" style="--btn-color: #667eea;" title="静谧蓝"></div>
+                <div class="color-btn" data-color="#a8edea" style="--btn-color: #a8edea;" title="冰川蓝"></div>
+                <div class="color-btn" data-color="#fed6e3" style="--btn-color: #fed6e3;" title="樱花粉"></div>
+            </div>
+
+            <!-- Opacity Picker (Hidden by default) -->
+            <div class="opacity-picker-container" id="opacityPicker">
+                <!-- The Frosted Glass Box -->
+                <div class="glass-box" id="opacityPreviewBox"></div>
+
+                <div class="slider-wrapper">
+                    <span class="slider-label">清晰</span>
+                    <input type="range" id="opacityInput" min="0" max="30" step="1" value="15">
+                    <span class="slider-label">模糊</span>
+                </div>
+            </div>
+
+
+            <!-- Background Image Picker (Hidden by default) -->
+            <div class="bg-image-picker-container" id="bgImagePicker">
+                <!-- Preview area for the background -->
+                <div class="bg-preview" id="bgPreview">
+                    <span class="slider-label" id="bgPreviewText"
+                        style="color:var(--text-muted); pointer-events:none;">默认白色</span>
+                    <img id="bgPreviewImg" style="display:none;" alt="Background Preview" />
+                    <video id="bgPreviewVideo" autoplay loop muted playsinline
+                        style="display:none; width: 100%; height: 100%; object-fit: cover;"></video>
+                </div>
+                <div class="upload-controls">
+                    <input type="file" id="bgImageInput" accept="image/*" hidden>
+                    <input type="file" id="bgVideoInput" accept="video/mp4,video/quicktime" hidden>
+                    <button class="upload-btn" id="uploadBtn">上传图片</button>
+                    <div style="position: relative;">
+                        <button class="upload-btn" id="uploadVideoBtn">上传视频</button>
+                        <div
+                            style="position: absolute; top: -10px; right: -10px; background: #ff0099; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 99px; pointer-events: none; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            捐款专用</div>
+                    </div>
+                    <button class="reset-bg-btn" id="resetBgBtn" title="恢复默认">↺</button>
+                </div>
+            </div>
+
+            <!-- Music Picker (Hidden by default) -->
+            <div class="music-picker-container" id="musicPicker">
+
+                <!-- Search Section -->
+                <div class="music-search-wrapper">
+                    <div class="music-source-toggle" id="musicSourceToggle" role="group" aria-label="Music source">
+                        <button class="source-btn active" data-source="netease" type="button">网易云</button>
+                        <button class="source-btn" data-source="qq" type="button">QQ 音乐</button>
+                    </div>
+                    <div class="music-filter-toggle" id="musicFilterToggle" role="group" aria-label="Search filter">
+                    </div>
+                    <div class="music-input-group">
+                        <div class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18V5l12-2v13"></path>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <circle cx="18" cy="16" r="3"></circle>
+                            </svg>
+                        </div>
+                        <input type="text" id="musicLinkInput" placeholder="搜索网易云歌曲名或ID..." autocomplete="off"
+                            spellcheck="false">
+                        <button id="musicFetchBtn" class="fetch-btn" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14m-7-7l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="music-status-text" id="musicStatus">默认网易云：搜索歌曲名或 ID</div>
+                </div>
+
+                <div class="music-results" id="musicResults" aria-live="polite"></div>
+
+                <!-- Display Stage -->
+                <div class="music-stage" id="musicStage" style="display:none;">
+                    <audio id="musicPreview" style="display:none;"></audio>
+                </div>
+
+            </div>
+
+            <!-- Playback Mode Picker (Hidden by default) -->
+            <div class="playback-picker-container" id="playbackPicker">
+                <div class="mode-toggle-wrapper">
+                    <button class="mode-btn active" data-mode="full" type="button">完整播放</button>
+                    <button class="mode-btn" data-mode="highlight" type="button">高潮播放</button>
+                </div>
+
+                <div class="highlight-controls" id="highlightControls" style="display: none;">
+                    <p class="highlight-instruction">拖动选择开始时间</p>
+                    <div class="time-slider-wrapper">
+                        <span id="currentTimeDisplay">00:00</span>
+                        <input type="range" id="startTimeInput" min="0" max="100" value="0" step="1">
+                        <span id="totalTimeDisplay">00:00</span>
+                    </div>
+                    <button id="previewStartBtn" class="preview-start-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                        试听此处
+                    </button>
+                </div>
+            </div>
+
+            <!-- Message Picker (Hidden by default) -->
+            <div class="message-picker-container" id="messagePicker">
+                <div class="mode-toggle-wrapper" id="msgModeToggle">
+                    <button class="mode-btn active" data-msg-mode="official" type="button">官方暖心句</button>
+                    <button class="mode-btn" data-msg-mode="custom" type="button">我自己写</button>
+                </div>
+
+                <!-- Official Mode Content -->
+                <div id="officialMessageContent" class="message-content-section">
+                    <div class="quote-card-container">
+                        <div class="quote-card" id="officialQuotePreview">
+                            "生活原本沉闷，但跑起来就有风。"
+                        </div>
+                    </div>
+                    <button class="refresh-btn" id="refreshQuoteBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16"
+                            height="16">
+                            <path d="M23 4v6h-6M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        换一句
+                    </button>
+                </div>
+
+                <!-- Custom Mode Content -->
+                <div id="customMessageContent" class="message-content-section" style="display: none;">
+                    <p class="instruction-text">最多 40 行，每行不超过 6 个字</p>
+                    <textarea id="customMessageInput" class="custom-textarea" placeholder="写一句...&#10;换一行..."
+                        spellcheck="false"></textarea>
+                    <div class="validation-status" id="messageValidation"></div>
+                </div>
+            </div>
+
+            <!-- Letter Picker (Hidden by default) -->
+            <div class="letter-picker-container" id="letterPicker">
+                <div class="mode-toggle-wrapper" id="letterModeToggle">
+                    <button class="mode-btn active" data-letter-mode="no" type="button">单纯送上祝福</button>
+                    <button class="mode-btn" data-letter-mode="yes" type="button">附上一封信</button>
+                </div>
+
+                <!-- Letter Content -->
+                <div id="letterContent" class="letter-content-section" style="display: none;">
+                    <p class="instruction-text">写下你想对 TA 说的话...</p>
+                    <textarea id="letterInput" class="custom-textarea letter-textarea" placeholder="亲爱的..."
+                        spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <!-- Back Button -->
+                <button class="nav-btn back-btn" id="prevBtn" aria-label="上一步">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M19 12H5m7-7l-7 7 7 7" />
+                    </svg>
+                </button>
+
+                <!-- Next Button -->
+                <button class="nav-btn next-btn" id="submitBtn" aria-label="下一步">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M5 12h14m-7-7l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Greeting State (Hidden initially) -->
+
+
+    <!-- Music Info Modal -->
+    <div class="modal-overlay" id="musicInfoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>音乐平台说明</h3>
+                <button class="modal-close" id="musicInfoClose" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="platform-info">
+                    <h4>网易云音乐</h4>
+                    <p><span class="badge success">优点</span> 搜索简单，只需输入歌曲名或歌手即可。</p>
+                    <p><span class="badge warning">缺点</span> 部分歌曲是 VIP 歌曲，仅可试听前 30 秒。</p>
+                </div>
+                <div class="platform-info">
+                    <h4>QQ 音乐</h4>
+                    <p><span class="badge success">优点</span> 歌曲库全，通常可播放完整歌曲。</p>
+                    <p><span class="badge warning">缺点</span> 搜索时需尽量准确，建议输入“歌名 - 歌手”，也支持粘贴分享链接。</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="musicInfoOk">我知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QQ Music Donation Modal -->
+    <div class="modal-overlay" id="qqMusicModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>功能受限说明</h3>
+                <button class="modal-close" id="qqMusicClose" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 1.5rem 0;">
+                <p style="margin-bottom: 1rem; line-height: 1.6;">QQ 音乐接口对接的是付费版本，大家可以免费听 VIP 歌曲。</p>
+                <p style="font-size: 0.9em; opacity: 0.8; margin-bottom: 1rem;">因为主播是高中生，承担不起这么高的费用，<br>所以请你捐款一点点帮我，求你了。
+                </p>
+                <p style="font-size: 0.85em; opacity: 0.7; margin-top: 0.5rem;">
+                    有问题可以联系 QQ：<strong style="color: #4facfe;">457089368</strong>
+                </p>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 1rem;">
+                <button class="modal-btn secondary" id="qqMusicCancel"
+                    style="background: rgba(255,255,255,0.1); color: var(--text-main);">算了</button>
+                <button class="modal-btn primary" id="qqMusicDonate"
+                    style="background: #4facfe; color: white;">没事我捐款</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sad Modal (Really don't want to donate?) -->
+    <div class="modal-overlay" id="sadModal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="modal-header">
+                <h3>真的不打算捐一点吗？</h3>
+                <button class="modal-close" id="sadClose" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 1rem 0;">
+                <div class="sad-icon-wrapper" style="margin-bottom: 1rem;">
+                    <svg t="1766687574096" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="5269" width="150" height="150">
+                        <path d="M340.48 957.44a168.96 43.52 0 1 0 337.92 0 168.96 43.52 0 1 0-337.92 0Z" fill="#C6C4C4"
+                            p-id="5270"></path>
+                        <path
+                            d="M512 100.352c-0.512-3.584-4.608-23.552-4.096-40.96-12.288-5.632-18.432-18.944-16.384-36.352l5.12 0.512c-2.048 18.432 5.632 26.624 11.776 30.208 1.024-8.704 3.072-16.384 7.68-20.48 3.584-3.584 8.704-4.096 14.336-2.048h0.512l0.512 0.512c11.264 11.264 8.192 19.456 6.144 22.016-4.096 6.656-14.848 9.728-24.576 7.168 0 14.336 2.048 30.208 3.584 38.4l-4.608 1.024z m1.536-44.544c8.192 2.56 16.896 0.512 19.968-4.608 2.56-4.096 1.024-9.728-5.12-15.36-3.584-1.024-6.656-0.512-9.216 1.024-3.072 3.072-5.12 10.24-5.632 18.944z"
+                            fill="#B47065" p-id="5271"></path>
+                        <path
+                            d="M442.88 596.48s-151.04 271.36 25.6 368.64h35.84s-61.44-65.024-35.84-133.12c0 0 53.76 25.088 107.52 0 0 0 8.704 99.84-46.08 133.12h46.08s165.376-112.64 20.48-368.64h-153.6z"
+                            fill="#FEE6E2" p-id="5272"></path>
+                        <path
+                            d="M577.024 967.68h-55.808l7.68-4.608c46.592-28.672 46.08-109.056 45.056-126.976-46.08 19.968-92.16 4.096-103.424-0.512-22.528 65.024 35.84 127.488 36.352 128l4.096 4.096h-42.496l-0.512-0.512c-39.936-22.016-66.56-55.296-78.848-97.792-33.792-117.248 51.712-272.896 52.736-274.432l0.512-1.536H599.04l0.512 1.536c41.472 73.216 82.944 182.272 44.544 282.624-23.04 60.416-64 88.576-65.536 89.6l-1.536 0.512z m-38.912-5.12h36.864c5.12-3.584 41.984-32.256 62.976-87.04 37.888-97.792-2.56-204.288-43.52-276.48H444.416c-8.192 15.36-82.944 159.232-51.2 268.8 11.776 41.472 37.376 73.216 76.288 94.72h29.696c-13.312-15.872-54.784-72.704-32.768-131.584l1.024-2.56 2.56 1.024c0.512 0 53.248 24.064 105.472 0l3.072-1.536 0.512 3.584s2.048 25.6-2.56 54.784c-6.144 34.816-18.944 60.928-38.4 76.288z"
+                            fill="#B47065" p-id="5273"></path>
+                        <path
+                            d="M512 79.36c176.64 0 321.536 120.32 320 268.8-3.072 235.52-143.36 268.8-320 268.8S186.368 566.272 192 348.16c4.096-148.48 143.36-268.8 320-268.8z"
+                            fill="#FEE6E2" p-id="5274"></path>
+                        <path
+                            d="M512 619.52c-123.904 0-209.408-25.6-261.12-78.848-43.008-44.544-63.488-109.056-61.44-192.512 4.096-152.064 145.92-271.36 322.56-271.36 96.768 0 187.392 35.84 249.344 98.304 48.128 48.64 74.24 110.08 73.216 173.056-1.536 110.08-32.768 183.296-95.744 224.768-62.464 40.96-149.504 46.592-226.816 46.592z m0-537.6c-174.08 0-313.344 116.736-317.44 266.24-2.048 81.92 17.92 145.408 59.904 188.928 51.2 52.224 135.168 77.312 257.536 77.312 194.048 0 314.368-44.544 317.44-266.24 0.512-61.44-24.576-121.856-71.68-169.472-60.928-61.44-150.528-96.768-245.76-96.768z"
+                            fill="#B47065" p-id="5275"></path>
+                        <path d="M709.12 430.08a30.72 17.92 0 1 0 61.44 0 30.72 17.92 0 1 0-61.44 0Z" fill="#FFAEAA"
+                            p-id="5276"></path>
+                        <path d="M268.8 430.08a30.72 17.92 0 1 0 61.44 0 30.72 17.92 0 1 0-61.44 0Z" fill="#FFAEAA"
+                            p-id="5277"></path>
+                        <path
+                            d="M717.312 318.464h-85.504l-30.208 288.256s97.28-11.264 138.24-46.08l-22.528-242.176zM327.68 318.464h86.528l18.432 288.256s-97.792-9.728-138.24-46.08L327.68 318.464z"
+                            fill="#FFFFFF" p-id="5278"></path>
+                        <path
+                            d="M601.6 313.344h144.384v10.24h-144.384zM298.496 313.344h144.384v10.24H298.496zM645.12 265.728h-48.64v-48.128h10.24v37.888h38.4zM445.952 266.752h-49.152v-10.24h38.912v-38.912h10.24zM569.344 470.528l-39.936-39.424-39.424 39.424-7.68-7.168 47.104-46.592 47.104 46.592z"
+                            fill="#B47065" p-id="5279"></path>
+                        <path
+                            d="M619.52 612.864s68.096 138.752-59.392 75.776c-33.792-16.896-63.488-110.592 4.608-100.864 32.768 4.608 66.56 77.824 66.56 77.824l-27.648-50.176c6.656-1.024 7.68-1.024 15.872-2.56z"
+                            fill="#FEE6E2" p-id="5280"></path>
+                        <path
+                            d="M612.864 707.584c-13.312 0-31.232-5.632-53.248-16.384-24.576-12.288-44.032-58.368-35.84-84.992 3.072-9.728 12.288-25.088 41.984-20.992 33.28 4.608 67.072 76.288 68.608 79.36l-4.608 2.048c-0.512-0.512-33.792-72.192-64.512-76.8-19.456-2.56-31.744 3.072-36.352 17.408-8.192 26.112 12.8 68.608 33.28 78.848 34.816 16.896 57.344 20.48 68.096 10.24 19.968-19.456-9.728-82.944-9.728-83.968l4.608-2.048c1.536 2.56 31.232 67.584 8.704 89.6-5.632 5.12-12.288 7.68-20.992 7.68z"
+                            fill="#B47065" p-id="5281"></path>
+                        <path
+                            d="M419.84 613.888s-66.048 136.704 58.88 73.728c33.28-16.896 61.952-110.592-4.096-100.864-31.744 4.608-65.024 77.824-65.024 77.824l25.6-49.152c-0.512 0-0.512 0-15.36-1.536z"
+                            fill="#FEE6E2" p-id="5282"></path>
+                        <path
+                            d="M427.52 706.56c-8.192 0-14.848-2.048-19.968-6.656-22.528-22.016 7.168-87.04 8.192-89.6l4.608 2.048c-0.512 0.512-29.184 64.512-9.216 83.968 10.24 9.728 32.768 6.656 66.048-10.752 19.968-10.24 40.448-53.76 32.768-79.36-4.608-13.824-16.384-19.456-35.328-16.896-30.208 4.608-62.976 75.776-62.976 76.288l-4.608-2.048c1.536-3.072 34.304-74.752 67.072-79.36 28.672-4.096 37.888 11.264 40.96 20.48 8.704 28.16-12.8 74.24-35.328 84.992-21.504 11.264-38.912 16.896-52.224 16.896z"
+                            fill="#B47065" p-id="5283"></path>
+                    </svg>
+                </div>
+                <p style="font-size: 1rem; opacity: 0.9; line-height: 1.6;">好心人，真的不打算帮帮我吗？<br>2块钱也是爱啊...</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 1rem;">
+                <button class="modal-btn secondary" id="sadCancel"
+                    style="background: rgba(255,255,255,0.1); color: var(--text-main);">真的算了</button>
+                <button class="modal-btn primary" id="sadDonate"
+                    style="background: #4facfe; color: white;">我不忍心，去捐款</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donate Payment Modal -->
+    <div class="modal-overlay" id="donateModal">
+        <div class="modal-content" style="max-width: 360px;">
+            <div class="modal-header">
+                <h3>感谢您的支持</h3>
+                <button class="modal-close" id="donateClose" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding-bottom: 1.5rem;">
+                <div class="donate-tabs"
+                    style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.2rem;">
+                    <button class="filter-btn active" id="btnWechat" type="button"
+                        style="min-width: 80px;">微信支付</button>
+                    <button class="filter-btn" id="btnAlipay" type="button" style="min-width: 80px;">支付宝</button>
+                </div>
+                <div class="qr-wrapper"
+                    style="background: white; padding: 12px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                    <img id="donateQrImg" src="" alt="Payment QR Code"
+                        style="width: 200px; height: 200px; display: block; border-radius: 4px;">
+                </div>
+                <div style="margin-top: 1.2rem;">
+                    <button class="modal-btn" id="saveQrBtn"
+                        style="font-size: 0.85rem; padding: 6px 16px;">保存捐款码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="share-modal-overlay" id="shareModalOverlay">
+        <div class="share-modal">
+            <h3>🎉 礼物创建成功！</h3>
+            <p>将以下链接分享给你的朋友，他们就可以收到你的祝福了</p>
+            <div class="share-url-box">
+                <input type="text" id="shareUrlInput" readonly value="">
+                <button id="copyShareUrl">复制</button>
+            </div>
+            <button class="share-modal-close" id="shareModalClose">完成</button>
+        </div>
+    </div>
+
+    <!-- Video Donation Modal -->
+    <div class="modal-overlay" id="videoDonationModal">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="modal-header">
+                <h3>🎬 视频功能说明</h3>
+                <button class="modal-close" id="videoDonationClose" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 1rem 0;">
+                <div class="video-donation-notice"
+                    style="background: rgba(255, 153, 0, 0.1); border: 1px solid rgba(255, 153, 0, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.2rem;">
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; line-height: 1.6;">
+                        因为视频存储与带宽<strong>成本较高</strong>，<br>
+                        视频功能需要捐款 <strong style="color: #ff0099;">3~5 元</strong> 才可以继续使用
+                    </p>
+                    <p style="margin: 0; font-size: 0.8rem; opacity: 0.7;">
+                        捐款时请备注 <strong style="color: #4facfe;">「视频专用」</strong>，<br>
+                        管理员确认后会给你发放验证码
+                    </p>
+                </div>
+
+                <div class="donate-tabs"
+                    style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.2rem;">
+                    <button class="filter-btn active" id="btnVideoWechat" type="button"
+                        style="min-width: 80px;">微信支付</button>
+                    <button class="filter-btn" id="btnVideoAlipay" type="button" style="min-width: 80px;">支付宝</button>
+                </div>
+                <div class="qr-wrapper"
+                    style="background: white; padding: 12px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                    <img id="videoDonateQrImg" src="" alt="Payment QR Code"
+                        style="width: 180px; height: 180px; display: block; border-radius: 4px;">
+                </div>
+
+                <div style="margin-top: 1.2rem;">
+                    <p style="margin: 0 0 0.6rem; font-size: 0.85rem; opacity: 0.8;">已捐款？请输入管理员提供的验证码：</p>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
+                        <input type="text" id="videoVerifyCode" placeholder="输入验证码" autocomplete="off"
+                            spellcheck="false"
+                            style="padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: inherit; font-size: 0.9rem; width: 140px; text-align: center;">
+                        <button class="modal-btn" id="videoVerifyBtn"
+                            style="font-size: 0.85rem; padding: 8px 16px;">验证</button>
+                    </div>
+                    <p id="videoVerifyStatus" style="margin: 0.5rem 0 0; font-size: 0.8rem; height: 1rem;"></p>
+                    <p style="margin-top: 0.8rem; font-size: 0.8rem; opacity: 0.6;">
+                        捐款后联系 QQ：<strong style="color: #4facfe;">457089368</strong>
+                    </p>
+                    <button class="modal-btn secondary" id="videoDonationCancel"
+                        style="margin-top: 1rem; background: rgba(255,255,255,0.1); color: var(--text-main);">算了吧</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="JS/core.js"></script>
+    <script src="JS/music.js"></script>
+    <script src="JS/donation.js"></script>
+    <script src="JS/message.js"></script>
+    <script src="JS/popup.js"></script>
+</body>
+
+</html>

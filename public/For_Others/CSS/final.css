@@ -1,0 +1,727 @@
+/* ============================================
+   FINAL.CSS - World-Class Preview Design
+   Designed for: Awwwards & Red Dot aesthetics
+   ============================================ */
+
+/* Container: Immersive, fixed, centered */
+.final-preview-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: none;
+    /* Hidden by default */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+    pointer-events: none;
+    perspective: 1000px;
+    /* For 3D effects */
+    /* Subtle darken overlay behind the card */
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+.final-preview-container.active {
+    display: flex;
+    pointer-events: auto;
+}
+
+/* 
+   Glassmorphism Card 
+   - Ultra-premium frosted glass 
+   - Multi-layered shadows and borders
+*/
+.final-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+
+    /* Complex border for depth: Top light, bottom dark */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+
+    box-shadow:
+        0 40px 80px -20px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 20px 40px -20px rgba(255, 255, 255, 0.1);
+
+    padding: 5rem 4rem;
+    border-radius: 40px;
+    max-width: 640px;
+    width: 100%;
+
+    /* Animation Initial State */
+    opacity: 0;
+    transform: translateY(60px) scale(0.9) rotateX(5deg);
+    transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+    overflow: hidden;
+    transform-style: preserve-3d;
+}
+
+.final-preview-container.active .final-card {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0);
+}
+
+/* Decorative Glow/Orbs inside card */
+.final-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%,
+            rgba(255, 255, 255, 0.03) 0%,
+            transparent 50%);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: rotateGlow 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotateGlow {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   Typography & Content
+   ============================================ */
+
+/* 1. Time Greeting */
+.time-greeting {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+
+    opacity: 0;
+    transform: translateY(30px);
+    animation: contentFadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.3s;
+}
+
+/* 2. Recipient Name - The Hero */
+.recipient-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 6vw, 5rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 3rem;
+
+    /* Premium Gradient Text */
+    background: linear-gradient(135deg,
+            #ffffff 0%,
+            #e0e0e0 20%,
+            #ffffff 40%,
+            #b4b4b4 80%,
+            #ffffff 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.1));
+
+    opacity: 0;
+    transform: translateY(40px);
+    animation:
+        contentFadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s,
+        shineText 8s linear infinite;
+}
+
+@keyframes shineText {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Icons Row */
+.gift-icons-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 2.5rem;
+
+    opacity: 0;
+    animation: contentFadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.7s;
+}
+
+.gift-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    /* Squirrel shape */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+}
+
+.gift-icon svg {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.4s ease;
+}
+
+/* Hover effect on icons */
+.gift-icon:hover {
+    transform: translateY(-8px) scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 30px -5px rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.gift-icon:hover svg {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Divider */
+.elegant-divider {
+    height: 1px;
+    width: 40px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    margin: 0 auto 2.5rem;
+    opacity: 0;
+    transform: scaleX(0);
+    animation: dividerExpand 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.9s;
+}
+
+/* Message Text */
+.gift-message {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: contentFadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.0s;
+}
+
+.highlight-text {
+    color: #fff;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.gift-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: #fff;
+    color: #000;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin: 0 6px;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* 
+   The Action Button 
+   - Liquid style or simple solid elegance
+*/
+.open-gift-btn {
+    position: relative;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 18px 56px;
+    border-radius: 99px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+    opacity: 0;
+    transform: translateY(30px);
+    animation: contentFadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.2s;
+
+    box-shadow:
+        0 8px 20px -5px rgba(0, 0, 0, 0.2),
+        0 0 0 0px rgba(255, 255, 255, 0.5);
+    /* For pulse */
+}
+
+/* Button hover reveal effect */
+.open-gift-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e0e0e0, #ffffff);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.open-gift-btn span {
+    position: relative;
+    z-index: 2;
+    /* Text above gradient */
+}
+
+.open-gift-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.open-gift-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* Animations */
+@keyframes contentFadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dividerExpand {
+    to {
+        opacity: 0.8;
+        transform: scaleX(1);
+    }
+}
+
+/* Light Theme Adaptations (If necessary) 
+   - Uses dark text on light glass
+*/
+body.light-theme .final-card {
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(200, 200, 200, 0.2);
+    box-shadow:
+        0 40px 80px -20px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+body.light-theme .recipient-name {
+    background: linear-gradient(135deg, #000 0%, #444 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: none;
+}
+
+body.light-theme .time-greeting {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .gift-message {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body.light-theme .gift-icon {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .gift-icon:hover {
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+body.light-theme .elegant-divider {
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.2), transparent);
+}
+
+body.light-theme .open-gift-btn {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .open-gift-btn:hover {
+    background: #222;
+}
+
+body.light-theme .highlight-text {
+    color: #000;
+    text-shadow: none;
+}
+
+body.light-theme .gift-count-badge {
+    background: #000;
+    color: #fff;
+}
+
+/* ============================================
+   Swipe Hint Animation (Added)
+   ============================================ */
+.swipe-hint-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: contentFadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.2s;
+    cursor: grab;
+    pointer-events: none;
+}
+
+.swipe-arrow {
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.9);
+    animation: bounceUp 2s infinite;
+}
+
+.swipe-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+@keyframes bounceUp {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+
+    40% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+}
+
+/* Light theme adaptations for swipe hint */
+body.light-theme .swipe-arrow {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+body.light-theme .swipe-text {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   Final Action Buttons - Submit Gift (固定右下角)
+   ============================================ */
+.final-action-buttons {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100000;
+    /* 确保始终在最顶层，高于 popup 的 z-index */
+    display: none;
+    /* 初始隐藏，由JS控制显示 */
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.final-action-buttons.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.final-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 36px;
+    border-radius: 99px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-btn.submit-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #fff;
+    box-shadow:
+        0 8px 24px -6px rgba(79, 172, 254, 0.5),
+        0 0 0 0 rgba(79, 172, 254, 0.4);
+}
+
+.final-btn.submit-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+        0 16px 32px -8px rgba(79, 172, 254, 0.6),
+        0 0 40px rgba(79, 172, 254, 0.3);
+}
+
+.final-btn.submit-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* Loading state */
+.final-btn.loading {
+    pointer-events: none;
+    background: linear-gradient(135deg, #888 0%, #aaa 100%);
+}
+
+.final-btn.loading span {
+    opacity: 0;
+}
+
+.final-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: btnSpin 0.8s linear infinite;
+}
+
+@keyframes btnSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success state */
+.final-btn.success {
+    background: linear-gradient(135deg, #00c853 0%, #64dd17 100%);
+    box-shadow: 0 8px 24px -6px rgba(0, 200, 83, 0.5);
+}
+
+.final-btn.success svg {
+    animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes checkPop {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Light theme adaptations */
+body.light-theme .final-btn.submit-btn {
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+    color: #fff;
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .final-btn.submit-btn:hover {
+    box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   Share Modal Styles
+   ============================================ */
+.share-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 100001;
+    /* 确保始终在最顶层，高于提交按钮 */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.share-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.share-modal {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 32px;
+    padding: 3rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.share-modal-overlay.active .share-modal {
+    transform: scale(1) translateY(0);
+}
+
+.share-modal h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.share-modal p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.share-url-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.share-url-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: monospace;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.share-url-box button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.share-url-box button:hover {
+    background: #e0e0e0;
+}
+
+.share-modal-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 14px 36px;
+    border-radius: 99px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.share-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Light theme adaptations for Share Modal */
+body.light-theme .share-modal {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .share-modal h3 {
+    color: #000;
+}
+
+body.light-theme .share-modal p {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body.light-theme .share-url-box {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .share-url-box input {
+    color: #000;
+}
+
+body.light-theme .share-url-box button {
+    background: #000;
+    color: #fff;
+}
+
+body.light-theme .share-url-box button:hover {
+    background: #333;
+}
+
+body.light-theme .share-modal-close {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: #000;
+}
+
+body.light-theme .share-modal-close:hover {
+    background: rgba(0, 0, 0, 0.2);
+}

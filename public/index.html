@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarmPrompt - Loading</title>
+
+    <!-- 引入 MiSans 字体 -->
+    <link rel="stylesheet" href="https://font.sec.miui.com/font/css?family=MiSans:400,700:MiSans" />
+
+    <!-- 引入思源黑体 (无衬线) 和 思源宋体 (衬线) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;900&family=Noto+Serif+SC:wght@300;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Loading Screen Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (Scoped mostly) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="w-full relative selection:bg-pink-500 selection:text-white">
+
+    <!-- =========================================
+         [LAYER 1] LOADING SCREEN
+         Initial State: Visible, Z-Index High
+         ========================================= -->
+    <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col justify-center items-center overflow-hidden">
+
+        <!-- 噪点层 -->
+        <div class="noise-overlay"></div>
+
+        <!-- 背景液态光球 - 增加容器包裹 -->
+        <div class="orb-wrapper">
+            <div class="liquid-orb"></div>
+        </div>
+
+        <!-- 主体内容容器 -->
+        <div class="z-20 w-full max-w-lg px-6 flex flex-col items-center">
+
+            <!-- 大标题 -->
+            <div class="overflow-hidden mb-2">
+                <h1 id="loading-title"
+                    class="text-6xl md:text-8xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 reveal-text"
+                    style="animation-delay: 0.1s;">
+                    WarmPrompt
+                </h1>
+            </div>
+
+            <!-- 进度条区域 -->
+            <div class="w-full h-[2px] bg-white/10 mt-8 mb-4 relative overflow-hidden rounded-full reveal-text"
+                style="animation-delay: 0.3s;">
+                <div id="progress" class="progress-line h-full bg-white absolute top-0 left-0"></div>
+            </div>
+
+            <!-- 进度数字 -->
+            <div class="w-full flex justify-between text-xs font-medium tracking-[0.2em] text-white/50 reveal-text"
+                style="animation-delay: 0.4s;">
+                <span>正在为你光速加载资源</span>
+                <span id="percentage">0%</span>
+            </div>
+
+        </div>
+
+        <!-- 底部赞助商 - 极简排版 -->
+        <div class="absolute bottom-12 z-20 w-full px-6 flex flex-col items-center reveal-text"
+            style="animation-delay: 0.8s;">
+
+            <!-- 恢复中文赞助说明文字 -->
+            <p class="text-xs text-white/40 mb-8 tracking-widest font-light text-center">
+                本网站参与了 <span class="text-white/80 mx-1 border-b border-white/10 pb-0.5">宝塔面板砺行计划</span> & <span
+                    class="text-white/80 mx-1 border-b border-white/10 pb-0.5">润雨赞助计划</span>
+            </p>
+
+            <!-- 赞助商 Logo 容器 -->
+            <div class="flex items-center justify-center gap-12 md:gap-20">
+
+                <!-- 润雨 -->
+                <a href="https://www.rainyun.com/NjkxODQ5_" target="_blank"
+                    class="sponsor-group group flex flex-col items-center gap-3 transition-transform duration-300 hover:-translate-y-1"
+                    title="润雨科技有限公司">
+                    <div class="h-12 w-auto relative flex items-center justify-center">
+                        <img src="https://app.rainyun.com/img/logo.d193755d.png" alt="润雨科技有限公司"
+                            class="sponsor-img h-9 w-auto object-contain">
+                    </div>
+                    <span
+                        class="text-[10px] text-white/0 group-hover:text-white/60 transition-all duration-300 absolute -bottom-6 tracking-widest whitespace-nowrap scale-90 group-hover:scale-100">润雨科技有限公司</span>
+                </a>
+
+                <!-- 分割线 -->
+                <div class="w-[1px] h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+
+                <!-- 宝塔 -->
+                <a href="https://www.bt.cn" target="_blank"
+                    class="sponsor-group group flex flex-col items-center gap-3 transition-transform duration-300 hover:-translate-y-1"
+                    title="宝塔面板砺行计划">
+                    <div class="h-12 w-auto relative flex items-center justify-center">
+                        <img src="https://docs.bt.cn/img/ai-chat/icon-1.png" alt="宝塔面板砺行计划"
+                            class="sponsor-img h-9 w-auto object-contain">
+                    </div>
+                    <span
+                        class="text-[10px] text-white/0 group-hover:text-white/60 transition-all duration-300 absolute -bottom-6 tracking-widest whitespace-nowrap scale-90 group-hover:scale-100">宝塔面板砺行计划</span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =========================================
+         [LAYER 2] MAIN APPLICATION CONTENT
+         Initial State: Hidden (Opacity 0), Z-Index Base
+         ========================================= -->
+    <div id="main-app" class="opacity-0 transition-opacity duration-1000 relative w-full h-full">
+
+        <!-- Background Noise (Original) -->
+        <!-- <div class="noise-overlay"></div> --> <!-- Commented out to avoid double noise, or keep if different -->
+
+        <div class="container">
+            <!-- 左侧：致自己 -> 改为 跨年版 -->
+            <div class="split left" id="side-self">
+                <canvas id="fireworks-canvas"></canvas>
+                <div class="content">
+                    <span class="label">Edition: 跨年特别版</span>
+                    <h1 class="title">一起跨年<span class="dot">.</span></h1>
+                    <p class="description">呼朋唤友 · 实时倒数 · 烟花盛宴</p>
+                    <div class="cta-wrapper">
+                        <a href="New_Year/" class="btn" data-target="newyear">开启派对 <span class="arrow">→</span></a>
+                    </div>
+                </div>
+                <div class="bg-visual">
+                    <div class="shape shape-1"></div>
+                </div>
+            </div>
+
+            <!-- 右侧：致他人 -->
+            <div class="split right" id="side-others">
+                <div class="content">
+                    <span class="label">Edition: 方框版</span>
+                    <h1 class="title">给他人<span class="dot">.</span></h1>
+                    <p class="description">礼物馈赠 · 情感连接 · 共享体验</p>
+                    <div class="cta-wrapper flex flex-col items-start gap-4">
+                        <a href="For_Others/" class="btn" data-target="others">选择此版本 <span class="arrow">→</span></a>
+                        <a href="http://23.141.172.221:20080/" target="_blank" class="btn small">访问老网站 <span
+                                class="arrow">→</span></a>
+                    </div>
+                </div>
+                <div class="bg-visual">
+                    <div class="shape shape-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚区域 -->
+        <footer class="page-footer">
+            <div class="footer-content">
+                <!-- 左侧：技术规格参数 -->
+                <div class="tech-spec">
+                    <div class="spec-group">
+                        <span class="spec-label">系统版本</span>
+                        <span class="spec-value code-font">4.0.0 <span class="status-dot"></span></span>
+                    </div>
+                    <div class="spec-divider"></div>
+                    <div class="spec-group">
+                        <span class="spec-label">基础设施</span>
+                        <span class="spec-value code-font">腾讯云 · 阿里云 · 雨云</span>
+                    </div>
+                    <div class="spec-divider"></div>
+                    <div class="spec-group">
+                        <span class="spec-label">网络分发</span>
+                        <span class="spec-value code-font">Q云</span>
+                    </div>
+                </div>
+
+                <!-- 右侧：署名与版权 -->
+                <div class="signature-block">
+                    <div class="made-by">设计与开发</div>
+                    <div class="author-name">Lokua</div>
+                    <div class="copyright">© 2025 Lokua WarmPrompt</div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- 全局背景虚化层 -->
+        <div class="support-backdrop" id="supportBackdrop"></div>
+
+        <!-- 灵动客服胶囊 -->
+        <div class="support-widget" id="supportWidget">
+            <div class="capsule-trigger">
+                <span class="icon">●</span>
+                <span class="text">询问客服...</span>
+            </div>
+
+            <!-- 展开后的内容区域 -->
+            <div class="capsule-content">
+                <div class="chat-header">
+                    <span class="status">ONLINE</span>
+                    <div class="close-btn">×</div>
+                </div>
+                <div class="chat-body">
+                    <div class="message system">
+                        <p>你好，我是 WarmPrompt 智能助手。</p>
+                        <p>请问是关于「致自己」还是「给他人」版本的疑问？</p>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" placeholder="输入您的问题...">
+                    <button class="send-btn">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

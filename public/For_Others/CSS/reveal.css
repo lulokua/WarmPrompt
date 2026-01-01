@@ -1,0 +1,398 @@
+/* =========================================
+   REVEAL.CSS - 礼物揭晓时刻 / 沉浸式音乐体验
+   Designed for Awwwards-level Aesthetics
+   Theme: Clean White (极简白)
+   ========================================= */
+
+/* 容器：全屏，覆盖一切，默认隐藏 */
+.reveal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    /* 高于 Overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* 核心修改：纯白背景，极简风格 */
+    background: #ffffff;
+    color: #1a1a1a;
+}
+
+.reveal-container.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* 顶部提示词 */
+.reveal-header {
+    position: absolute;
+    top: 8%;
+    text-align: center;
+    color: #999999;
+    /* 浅灰色 */
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 1s ease 0.5s;
+}
+
+.reveal-container.active .reveal-header {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* 核心卡片区域 */
+.music-immersive-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    transform: scale(0.95);
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-container.active .music-immersive-card {
+    transform: scale(1);
+}
+
+/* 唱片/专辑封面容器 */
+.vinyl-wrapper {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin-bottom: 3rem;
+    border-radius: 50%;
+
+    /* 调整阴影以适应白色背景：更柔和、更扩散，增加高级感 */
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    /* 极细边框替代光晕 */
+
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 黑胶纹理遮罩 (伪元素) */
+.vinyl-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background:
+        repeating-radial-gradient(#111 0,
+            #111 2px,
+            #222 3px,
+            #222 4px);
+    opacity: 0.1;
+    /* 淡淡的纹理 */
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 专辑图片 */
+.vinyl-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    z-index: 1;
+    /* 默认不旋转，播放时添加类名 */
+    animation: rotateVinyl 20s linear infinite;
+    animation-play-state: paused;
+}
+
+.reveal-container.playing .vinyl-art {
+    animation-play-state: running;
+    box-shadow: 0 0 40px var(--accent-1);
+    /* 播放时产生有色光晕 */
+}
+
+/* 唱片中间的小孔 */
+.vinyl-center-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    background: #ffffff;
+    /* 必须改为白色，模拟镂空 */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 文本信息 */
+.track-info-large {
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.track-title-large {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+    color: #111111;
+    /* 纯黑标题 */
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.track-artist-large {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #888888;
+    /* 中灰副标题 */
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* 进场动画延迟 */
+.reveal-container.active .track-title-large {
+    animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.3s;
+}
+
+.reveal-container.active .track-artist-large {
+    animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s;
+}
+
+/* 播放控制条 */
+.immersive-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.reveal-container.active .immersive-controls {
+    animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.7s;
+}
+
+/* 进度条容器 */
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background: #f0f0f0;
+    /* 浅灰槽 */
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 进度条本身 */
+.progress-bar {
+    height: 100%;
+    background: var(--accent-1, #4facfe);
+    width: 0%;
+    border-radius: 2px;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+/* 进度条末端的光点 */
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-1);
+    /* 使用主题色 */
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-1);
+    opacity: 0;
+}
+
+/* 时间显示 */
+.time-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: #bbbbbb;
+    /* 更浅的灰色 */
+    font-variant-numeric: tabular-nums;
+}
+
+/* 播放按钮 (简约圆圈) */
+.play-btn-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    /* 极细边框 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    /* 柔和阴影 */
+    color: #333333;
+}
+
+.play-btn-large:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    border-color: #dddddd;
+}
+
+.play-btn-large svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    margin-left: 2px;
+    /* 视觉修正 play icon */
+}
+
+.reveal-container.playing .play-btn-large svg {
+    margin-left: 0;
+    /* pause icon 居中 */
+}
+
+/* Next Step Swipe Hint (Replaces button) */
+.swipe-hint-container {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: grab;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 10;
+    pointer-events: none;
+    /* Let container handle swipes */
+}
+
+.reveal-container.active .swipe-hint-container {
+    animation: fadeInUp 1s forwards 2s;
+}
+
+.swipe-arrow {
+    width: 28px;
+    height: 28px;
+    color: #bbbbbb;
+    /* Light gray arrow */
+    animation: bounceUp 2s infinite;
+}
+
+.hint-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #999999;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+@keyframes bounceUp {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+
+    40% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+}
+
+/* 动画定义 */
+@keyframes rotateVinyl {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-5px);
+    }
+
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+/* 移动端适配 */
+@media (max-width: 480px) {
+    .vinyl-wrapper {
+        width: 240px;
+        height: 240px;
+        margin-bottom: 2rem;
+    }
+
+    .track-title-large {
+        font-size: 1.8rem;
+        /* 稍微调小一点 */
+    }
+}
