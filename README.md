@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL">
   <img src="https://img.shields.io/badge/Nginx-latest-009639?logo=nginx&logoColor=white" alt="Nginx">
   <img src="https://img.shields.io/badge/Ubuntu-22.04+-E95420?logo=ubuntu&logoColor=white" alt="Ubuntu">
-  <img src="https://img.shields.io/badge/License-Private-red" alt="License">
+  <img src="https://img.shields.io/badge/License-WNCL%20v1.0-orange" alt="License">
 </p>
 
 <h1 align="center">WarmPrompt v5.0</h1>
@@ -223,6 +223,17 @@ pm2 restart warmprompt-media
 | 主应用 | 3000 | API 路由 + 静态文件服务 |
 | 媒体服务 | 4001 | 图片/视频上传、流媒体 |
 | Nginx | 80 | 反向代理，统一入口 |
+
+## 许可协议
+
+本项目采用 **WarmPrompt 非商业使用许可协议 (WNCL v1.0)** 发布。
+
+- 你可以自由部署、使用、修改和分发本软件
+- 你可以将本软件搭建给自己或他人使用
+- **禁止以任何形式收费**（包括出售、付费服务、会员费等）
+- 分发时必须附带完整的许可协议
+
+详情请阅读 [LICENSE](LICENSE) 文件。
 
 ---
 
