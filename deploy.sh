@@ -5,7 +5,7 @@
 # ═══════════════════════════════════════════════════════════════
 
 # ══════════════════════ 配置常量 ══════════════════════
-DOWNLOAD_URL=""                        # ← 项目下载链接（待填写）
+DOWNLOAD_URL="https://github.com/lulokua/WarmPrompt/releases/download/v5.0/WarmPrompt_v5.0.zip"
 DEFAULT_INSTALL_DIR="/opt/WarmPrompt"
 CONF_DIR="/etc/warmprompt"
 CONF_FILE="${CONF_DIR}/install.conf"
