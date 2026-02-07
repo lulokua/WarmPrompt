@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>WarmPrompt - 送给他人</title>
+    <meta name="description" content="WarmPrompt - 为您的朋友创建温暖的提示" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="gift-popup.css" />
+</head>
+
+<body class="page">
+    <!-- 返回按钮 -->
+    <button id="back-button" class="icon-button back-button" type="button" aria-label="返回首页">
+        <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M671.968 912c-12.288 0-24.576-4.672-33.952-14.048L286.048 545.984c-18.752-18.72-18.752-49.12 0-67.872l351.968-352c18.752-18.752 49.12-18.752 67.872 0 18.752 18.72 18.752 49.12 0 67.872L387.872 512l318.016 318.016c18.752 18.752 18.752 49.12 0 67.872C696.544 907.328 684.256 912 671.968 912z"
+                fill="currentColor"></path>
+        </svg>
+    </button>
+
+    <button id="settings-toggle" class="icon-button settings-toggle" type="button" aria-label="设置" aria-expanded="false"
+        aria-controls="settings-panel">
+        <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M449.194667 82.346667a128 128 0 0 1 125.610666 0l284.16 160a128 128 0 0 1 65.194667 111.530666v316.245334a128 128 0 0 1-65.194667 111.530666l-284.16 160a128 128 0 0 1-125.610666 0l-284.16-160a128 128 0 0 1-65.194667-111.530666V353.877333A128 128 0 0 1 165.034667 242.346667z m83.754666 74.410666a42.666667 42.666667 0 0 0-41.898666 0L206.933333 316.714667a42.666667 42.666667 0 0 0-21.76 37.162666v316.245334a42.666667 42.666667 0 0 0 21.76 37.162666l284.16 160a42.666667 42.666667 0 0 0 41.898667 0l284.16-160a42.666667 42.666667 0 0 0 21.76-37.162666V353.877333a42.666667 42.666667 0 0 0-21.76-37.162666zM512 341.333333a170.666667 170.666667 0 1 1 0 341.333334 170.666667 170.666667 0 0 1 0-341.333334z m0 85.333334a85.333333 85.333333 0 1 0 0 170.666666 85.333333 85.333333 0 0 0 0-170.666666z"
+                fill="currentColor"></path>
+        </svg>
+    </button>
+
+    <div class="layout">
+        <div class="card name-card">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M512 420c-79.5 0-144 64.5-144 144s64.5 144 144 144 144-64.5 144-144-64.5-144-144-144z m0 220c-41.9 0-76-34.1-76-76s34.1-76 76-76 76 34.1 76 76-34.1 76-76 76z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M512 288c-26.5 0-48 21.5-48 48v64c0 26.5 21.5 48 48 48s48-21.5 48-48v-64c0-26.5-21.5-48-48-48z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">送给谁？</h2>
+                <p class="card-subtitle">输入名字，为 ta 创建专属提示</p>
+            </div>
+
+            <div class="card-body">
+                <div class="input-group">
+                    <label for="recipient-name" class="input-label">对方的名字</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="recipient-name" class="name-input" placeholder="例如：小明、Alice"
+                            maxlength="8" autocomplete="off" />
+                        <span class="input-counter"><span id="char-count">0</span>/8</span>
+                    </div>
+                    <p class="input-hint">可以是真名、昵称或任何称呼</p>
+                </div>
+
+                <button id="continue-button" class="continue-button" type="button" disabled>
+                    <span class="button-text">继续</span>
+                    <span class="button-icon">
+                        <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 第二步：你的名字 -->
+        <div class="card name-card" id="sender-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 512c94.293333 0 170.666667-76.373333 170.666667-170.666667s-76.373333-170.666667-170.666667-170.666667S341.333333 247.04 341.333333 341.333333 417.706667 512 512 512zM512 597.333333c-113.92 0-341.333333 57.173333-341.333333 170.666667l0 85.333333 682.666667 0 0-85.333333C853.333333 654.506667 625.92 597.333333 512 597.333333z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">你的名字是？</h2>
+                <p class="card-subtitle">让 ta 知道是谁送的温馨的礼物</p>
+            </div>
+
+            <div class="card-body">
+                <div class="input-group">
+                    <label for="sender-name" class="input-label">你的名字</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="sender-name" class="name-input" placeholder="例如：Jim" maxlength="8"
+                            autocomplete="off" />
+                        <span class="input-counter"><span id="sender-char-count">0</span>/8</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="sender-back-button" class="secondary-button" type="button">
+                        返回上一步
+                    </button>
+                    <button id="sender-continue-button" class="continue-button" type="button" disabled>
+                        <span class="button-text">继续</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三步：选择颜色 -->
+        <div class="card name-card" id="color-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM512 512m-160 0a160 160 0 1 0 320 0 160 160 0 1 0-320 0Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <h2 class="card-title">选择一种颜色</h2>
+                <p class="card-subtitle">为方框挑选一个喜欢的色调</p>
+            </div>
+
+            <div class="card-body">
+                <div class="color-grid" id="color-grid">
+                    <!-- 颜色选项将由 JS 生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 第四步：调整毛玻璃效果 -->
+        <div class="card name-card" id="glass-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M112 112h800v800H112V112zm800 64H176v672h736V176zM328 328h368v368H328V328z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <h2 class="card-title">调整透明度</h2>
+                <p class="card-subtitle">拖动滑块调整方框的毛玻璃质感</p>
+            </div>
+
+            <div class="card-body">
+                <!-- 预览区域 -->
+                <div class="glass-preview-container">
+                    <div id="glass-preview-box" class="glass-preview-box">
+                        <span class="preview-text">预览效果</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="slider-labels">
+                        <span>毛玻璃</span>
+                        <span>不透明</span>
+                    </div>
+                    <input type="range" id="glass-slider" class="range-slider" min="0" max="100" value="50" step="1">
+                </div>
+
+                <div class="button-group">
+                    <!-- 既然上一步是自动跳转，这里就不放返回按钮了，或者放一个返回选颜色的按钮 -->
+                    <button id="glass-back-button" class="secondary-button" type="button">
+                        重新选色
+                    </button>
+                    <button id="glass-continue-button" class="continue-button" type="button">
+                        <span class="button-text">继续</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第五步：选择方框版本 -->
+        <div class="card name-card" id="frame-style-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M224 160h576c35.2 0 64 28.8 64 64v576c0 35.2-28.8 64-64 64H224c-35.2 0-64-28.8-64-64V224c0-35.2 28.8-64 64-64zm0 64v576h576V224H224zm128 96h320v64H352v-64zm0 128h320v64H352v-64z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <h2 class="card-title">选择方框版本</h2>
+                <p class="card-subtitle">选择名字与方框的呈现方式</p>
+            </div>
+
+            <div class="card-body">
+                <div class="frame-style-options" id="frame-style-options">
+                    <button class="frame-style-option is-selected" type="button" data-style="inside" aria-pressed="true">
+                        <div class="frame-style-preview frame-style-preview--inside">
+                            <div class="frame-preview-name">小明</div>
+                            <div class="frame-preview-box">
+                                <span class="frame-preview-text">小明 今天也要开心</span>
+                            </div>
+                        </div>
+                        <div class="frame-style-info">
+                            <div class="frame-style-title">经典版</div>
+                            <div class="frame-style-desc">名字在方框里面</div>
+                        </div>
+                    </button>
+
+                    <button class="frame-style-option" type="button" data-style="name-top" aria-pressed="false">
+                        <div class="frame-style-preview frame-style-preview--name-top">
+                            <div class="frame-preview-name">小明</div>
+                            <div class="frame-preview-box">
+                                <span class="frame-preview-text">今天也要开心</span>
+                            </div>
+                        </div>
+                        <div class="frame-style-info">
+                            <div class="frame-style-title">名字在上</div>
+                            <div class="frame-style-desc">名字在方框上方居中</div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="button-group">
+                    <button id="frame-style-back-button" class="secondary-button" type="button">
+                        返回上一步
+                    </button>
+                    <button id="frame-style-continue-button" class="continue-button" type="button">
+                        下一步
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第六步：选择背景 -->
+        <div class="card name-card" id="bg-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zM336 448c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zM96 832V192h832v640H96zm224-192l128 160h320l-160-224-128 160-96-128-192 224h128z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">选择背景</h2>
+                <p class="card-subtitle">为页面挑选一个精美的背景</p>
+            </div>
+
+            <div class="card-body">
+                <div class="bg-grid-container">
+                    <div class="bg-grid" id="bg-grid">
+                        <!-- 背景选项将由 JS 生成 -->
+                    </div>
+
+                    <div class="upload-section">
+                        <div class="upload-buttons-row">
+                            <input type="file" id="bg-upload-image" accept="image/*" style="display: none;">
+                            <button id="upload-image-btn" class="upload-button" type="button">
+                                <span class="upload-icon">
+                                    <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.6-9.4-22.7zM790.2 326H602V137.8L790.2 326z m1.8 562H232V128h306v230c0 17.7 14.3 32 32 32h222v498z"
+                                            fill="currentColor" />
+                                        <path d="M512 448m-80 0a80 80 0 1 0 160 0 80 80 0 1 0-160 0Z"
+                                            fill="currentColor" />
+                                        <path d="M304 672h416l-124.8-166.4-96 112-67.2-76.8L304 672z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <span class="upload-text">上传图片</span>
+                            </button>
+
+                            <input type="file" id="bg-upload-video" accept="video/*" style="display: none;">
+                            <button id="upload-video-btn" class="upload-button" type="button">
+                                <span class="upload-icon">
+                                    <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                            fill="currentColor" />
+                                        <path
+                                            d="M719.4 499.1l-296.1-215A45.9 45.9 0 0 0 352 321.2v381.6a45.9 45.9 0 0 0 71.3 37.1l296.1-215a45.9 45.9 0 0 0 0-75.8zM416 662.9V361.1l208 150.9-208 150.9z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <span class="upload-text">上传视频</span>
+                            </button>
+                        </div>
+
+                        <div id="upload-preview" class="upload-preview" style="display: none;">
+                            <div class="preview-media-wrapper">
+                                <!-- 预览内容 -->
+                            </div>
+                            <button class="remove-upload" type="button" aria-label="移除上传">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="bg-back-button" class="secondary-button" type="button">
+                        调整透明度
+                    </button>
+                    <button id="bg-continue-button" class="continue-button" type="button" disabled>
+                        <span class="button-text">下一步</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第七步：选择音乐 -->
+        <div class="card name-card" id="music-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M512 288c-17.7 0-32 14.3-32 32v192c0 4.4.9 8.5 2.4 12.3l-82.4 82.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96c6-6 9.4-14.1 9.4-22.6V320c0-17.7-14.3-32-32-32z"
+                            fill="currentColor"></path>
+                        <circle cx="512" cy="512" r="48" fill="currentColor"></circle>
+                        <path
+                            d="M680 400a24 24 0 1 0 48 0 24 24 0 1 0-48 0zM680 624a24 24 0 1 0 48 0 24 24 0 1 0-48 0zM296 400a24 24 0 1 0 48 0 24 24 0 1 0-48 0zM296 624a24 24 0 1 0 48 0 24 24 0 1 0-48 0z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">添加背景音乐</h2>
+                <p class="card-subtitle">为页面选择一首动听的歌曲</p>
+            </div>
+
+            <div class="card-body">
+                <!-- 音乐来源选择 -->
+                <div class="music-source-options" id="music-source-options">
+                    <button class="music-source-btn selected" data-source="none" type="button">
+                        <span class="source-icon">🔇</span>
+                        <span class="source-text">不使用音乐</span>
+                    </button>
+                    <button class="music-source-btn" data-source="netease" type="button">
+                        <span class="source-icon"><img
+                                src="https://tse1-mm.cn.bing.net/th/id/OIP-C.cN62Hg6QUgQFdiaFSsksjAHaHL?w=186&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                alt="网易云音乐" class="music-source-logo"></span>
+                        <span class="source-text">网易云音乐免费</span>
+                        <span class="vip-tag">免费</span>
+                    </button>
+                    <button class="music-source-btn" data-source="netease-login" type="button" disabled
+                        aria-disabled="true">
+                        <span class="source-icon"><img
+                                src="https://tse1-mm.cn.bing.net/th/id/OIP-C.cN62Hg6QUgQFdiaFSsksjAHaHL?w=186&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                alt="网易云音乐" class="music-source-logo"></span>
+                        <span class="source-text">网易云音乐VIP</span>
+                        <span class="vip-tag">登录后才可以使用</span>
+                    </button>
+                    <button class="music-source-btn" data-source="qq" type="button" disabled aria-disabled="true">
+                        <span class="source-icon"><img
+                                src="https://tse2-mm.cn.bing.net/th/id/OIP-C.uJ7sNxhOc_V7zZc-vZtsbQAAAA?w=167&h=180&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                alt="QQ音乐" class="music-source-logo"></span>
+                        <span class="source-text">QQ音乐</span>
+                        <span class="vip-tag">登录后才可以使用</span>
+                    </button>
+                </div>
+
+                <!-- 搜索区域 -->
+                <div class="music-search-section" id="music-search-section" style="display: none;">
+                    <div class="input-group">
+                        <label for="music-search-input" class="input-label">搜索歌曲</label>
+                        <div class="search-input-wrapper">
+                            <input type="text" id="music-search-input" class="name-input" placeholder="输入歌曲名称..."
+                                autocomplete="off" />
+                            <button id="music-search-btn" class="search-btn" type="button">
+                                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M909.6 854.5L649.9 594.8C690.2 542.7 714 478.4 714 408c0-167.4-135.6-303-303-303S108 240.6 108 408s135.6 303 303 303c70.4 0 134.7-23.8 186.8-64.1l259.7 259.6c12.5 12.5 32.8 12.5 45.3 0l6.8-6.8c12.5-12.5 12.5-32.7 0-45.2zM411 651c-134.2 0-243-108.8-243-243s108.8-243 243-243 243 108.8 243 243-108.8 243-243 243z"
+                                        fill="currentColor" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 搜索结果 -->
+                    <div class="music-search-results" id="music-search-results">
+                        <!-- 搜索结果将由 JS 生成 -->
+                    </div>
+
+                    <!-- 已选歌曲预览 -->
+                    <div class="selected-music-preview" id="selected-music-preview" style="display: none;">
+                        <div class="music-preview-info">
+                            <img class="music-cover" id="preview-cover" src="" alt="封面">
+                            <div class="music-details">
+                                <div class="music-title" id="preview-title">歌曲名</div>
+                                <div class="music-artist" id="preview-artist">歌手</div>
+                            </div>
+                        </div>
+                        <div class="music-preview-controls">
+                            <button class="play-btn" id="preview-play-btn" type="button">
+                                <svg class="icon play-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"
+                                        fill="currentColor" />
+                                </svg>
+                                <svg class="icon pause-icon" style="display:none;" viewBox="0 0 1024 1024"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M304 176h80v672h-80zM640 176h80v672h-80z" fill="currentColor" />
+                                </svg>
+                            </button>
+                            <button class="remove-music-btn" id="remove-music-btn" type="button">×</button>
+                        </div>
+                        <audio id="music-audio" style="display: none;"></audio>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="music-back-button" class="secondary-button" type="button">
+                        返回上一步
+                    </button>
+                    <button id="music-continue-button" class="continue-button" type="button">
+                        <span class="button-text">下一步</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第八步：播放模式 -->
+        <div class="card name-card" id="playback-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M512 256c-28.8 0-56 4.6-81.8 13.2-12.2-16-29.4-28-49.4-34.4C428.8 214.6 469.2 204 512 204c170.2 0 308 137.8 308 308 0 49-11.4 95.2-31.6 136.6-13.2-12-29.2-20.8-46.8-24.8C757.2 590.2 768 552.2 768 512c0-141.4-114.6-256-256-256z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M627.4 686.2c-15.6 13.6-36.8 13.2-50.6-1-31.8-32.6-70-55.2-113.2-66.2-19.4-5-30.8-24.6-25.2-43.8 5.6-19.2 25.8-30.4 45.2-25.4 52.8 13.6 99.6 41.2 138.4 81 13.8 14.2 11.2 38.6-4.6 52.6z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M256 512c0 141.4 114.6 256 256 256 42.8 0 82.6-10.8 116.6-29.8 16.4 5.6 32.6 14.2 46.8 24.8C633.2 804.6 575.2 820 512 820c-170.2 0-308-137.8-308-308 0-42.8 10.8-82.6 29.8-116.6-5.6-16.4-14.2-32.6-24.8-46.8C266.8 402.4 256 455.8 256 512z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">播放设置</h2>
+                <p class="card-subtitle">选择音乐的播放方式</p>
+            </div>
+
+            <div class="card-body">
+                <div class="music-source-options" id="playback-mode-options">
+                    <button class="music-source-btn selected" data-mode="full" type="button">
+                        <span class="source-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                    fill="currentColor" />
+                                <path
+                                    d="M719.4 499.1l-296.1-215A45.9 45.9 0 0 0 352 321.2v381.6a45.9 45.9 0 0 0 71.3 37.1l296.1-215a45.9 45.9 0 0 0 0-75.8z"
+                                    fill="currentColor" />
+                            </svg>
+                        </span>
+                        <span class="source-text">完整播放</span>
+                        <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                    </button>
+                    <button class="music-source-btn" data-mode="snippet" type="button">
+                        <span class="source-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                    fill="currentColor" />
+                                <path d="M448 320h128v384h-128z" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <span class="source-text">播放片段</span>
+                    </button>
+                </div>
+
+                <!-- 播放片段控制 -->
+                <div class="playback-snippet-controls" id="playback-snippet-controls" style="display: none;">
+                    <div class="input-group">
+                        <label for="snippet-slider" class="input-label">选择开始时间: <span
+                                id="snippet-time-display">00:00</span></label>
+                        <input type="range" id="snippet-slider" class="range-slider" min="0" max="100" value="0"
+                            step="1">
+                        <div class="snippet-actions">
+                            <button id="snippet-preview-btn" class="secondary-button" type="button"
+                                style="width: auto; margin-top: 10px; padding: 8px 16px; font-size: 0.9rem;">
+                                <span class="button-icon" style="margin-right: 6px;">
+                                    <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"
+                                        style="width: 1em; height: 1em;">
+                                        <path
+                                            d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </span>
+                                试听片段
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="playback-back-button" class="secondary-button" type="button">
+                        重新选歌
+                    </button>
+                    <button id="playback-continue-button" class="continue-button" type="button">
+                        <span class="button-text">下一步</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第九步：选择内容 -->
+        <div class="card name-card" id="content-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.6-9.4-22.7zM790.2 326H602V137.8L790.2 326z m1.8 562H232V128h306v230c0 17.7 14.3 32 32 32h222v498z"
+                            fill="currentColor" />
+                        <path d="M304 480h416v32H304zm0 96h416v32H304zm0 96h416v32H304z" fill="currentColor" />
+                    </svg>
+                </div>
+                <h2 class="card-title">填写内容</h2>
+                <p class="card-subtitle">选择方框里显示的文字内容</p>
+            </div>
+
+            <div class="card-body">
+                <div class="music-source-options" id="content-options">
+                    <button class="music-source-btn" data-type="official" type="button">
+                        <span class="source-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                    fill="currentColor" />
+                                <path d="M512 256v384l-128-128h256z" fill="currentColor" />
+                                <path d="M352 512h320v64H352z" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <span class="source-text">官方内容</span>
+                        <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                    </button>
+                    <button class="music-source-btn" data-type="custom" type="button">
+                        <span class="source-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M880 832H144c-17.7 0-32-14.3-32-32v-48c0-17.7 14.3-32 32-32h736c17.7 0 32 14.3 32 32v48c0 17.7-14.3 32-32 32zM292.8 604.8l-156 39 39-156c2.8-11.3 8.8-21.6 17.2-29.6l444-444c16.4-16.4 43.6-16.4 60 0l116 116c16.4 16.4 16.4 43.6 0 60l-444 444c-8 8.8-18.4 14.4-29.6 17.2l-46.6-46.6z"
+                                    fill="currentColor" />
+                            </svg>
+                        </span>
+                        <span class="source-text">自己写</span>
+                    </button>
+                </div>
+
+                <div id="custom-content-section" style="display: none; margin-top: 10px;">
+                    <div class="input-group">
+                        <label for="custom-content-text" class="input-label">输入内容</label>
+                        <textarea id="custom-content-text" class="name-input" rows="5"
+                            placeholder="写下你想说的话... (换行可直接回车)"
+                            style="height: auto; padding: 12px; resize: vertical; min-height: 100px; font-family: inherit;"></textarea>
+                    </div>
+                </div>
+
+                <div id="official-content-preview"
+                    style="display: none; margin-top: 5px; font-size: 0.9em; color: var(--text-secondary); background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto;">
+                    <p class="preview-text" style="margin: 0; line-height: 1.5; white-space: pre-wrap;"></p>
+                </div>
+
+                <div class="button-group">
+                    <button id="content-back-button" class="secondary-button" type="button">
+                        上一步
+                    </button>
+                    <button id="content-continue-button" class="continue-button" type="button">
+                        <span class="button-text">完成制作</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <button id="online-preview-button" class="secondary-button" type="button">
+                        <span class="button-icon" style="margin-right: 6px;">
+                            <svg class="icon" viewBox="0 0 1536 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                style="width: 1em; height: 1em;">
+                                <path
+                                    d="M768 1024C343.808 1024 0 677.12 0 512s343.808-512 768-512 768 344.576 768 512c0 167.424-343.808 512-768 512z m0-192a320 320 0 1 0 0-640 320 320 0 0 0 0 640z"
+                                    fill="currentColor"></path>
+                                <path d="M768 704a192 192 0 1 0 0-384 192 192 0 0 0 0 384z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        在线预览
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第十步：预览 -->
+        <div class="card name-card" id="final-preview-card" style="display: none;">
+            <div class="card-header">
+                <div class="greeting-icon">
+                    <svg class="icon icon-large" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                            fill="currentColor"></path>
+                        <path
+                            d="M719.4 499.1l-296.1-215A45.9 45.9 0 0 0 352 321.2v381.6a45.9 45.9 0 0 0 71.3 37.1l296.1-215a45.9 45.9 0 0 0 0-75.8z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="card-title">预览</h2>
+                <p class="card-subtitle">最后确认一下</p>
+            </div>
+
+            <div class="card-body">
+                <div class="final-message-container"
+                    style="text-align: center; margin-bottom: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.03); border-radius: 12px;">
+                    <p id="final-greeting-text"
+                        style="font-size: 1.1rem; line-height: 1.6; color: var(--text-primary); margin: 0;">
+                        <!-- 动态内容 -->
+                    </p>
+                </div>
+
+                <div class="button-group">
+                    <button id="final-back-button" class="secondary-button" type="button">
+                        返回修改
+                    </button>
+                    <button id="final-open-button" class="continue-button" type="button">
+                        <span class="button-text">打开礼物</span>
+                        <span class="button-icon">
+                            <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="settings-overlay" class="overlay" aria-hidden="true"></div>
+    <aside id="settings-panel" class="settings-panel" role="dialog" aria-label="设置" aria-hidden="true" inert>
+        <div class="panel-header">
+            <h3 class="panel-title">设置</h3>
+            <button id="settings-close" class="icon-button icon-button--small" type="button" aria-label="关闭设置">
+                ×
+            </button>
+        </div>
+        <div class="panel-body">
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">主题</div>
+                    <div id="theme-label" class="setting-value">浅色模式</div>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+                    <span id="theme-thumb" class="theme-thumb"></span>
+                </button>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">极速模式</div>
+                    <div id="turbo-label" class="setting-value">已关闭</div>
+                </div>
+                <button id="turbo-toggle" class="theme-toggle turbo-toggle" type="button" aria-pressed="false">
+                    <span id="turbo-thumb" class="theme-thumb turbo-thumb"></span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 极速模式确认弹窗 -->
+    <div id="turbo-modal-overlay" class="turbo-modal-overlay" aria-hidden="true"></div>
+    <div id="turbo-modal" class="turbo-modal" role="dialog" aria-modal="true" aria-labelledby="turbo-modal-title"
+        aria-hidden="true">
+        <div class="turbo-modal-content">
+            <div class="turbo-modal-icon">⚡</div>
+            <h3 id="turbo-modal-title" class="turbo-modal-title">开启极速模式</h3>
+            <p class="turbo-modal-desc">
+                极速模式是为<strong>快速使用</strong>和<strong>老旧设备</strong>设计的。
+                <br><br>
+                开启后，部分功能和界面美化效果会有一定程度的减少，以提升运行速度和响应性能。
+            </p>
+            <div class="turbo-modal-actions">
+                <button id="turbo-cancel" class="turbo-modal-button turbo-modal-button--cancel" type="button">
+                    算了吧
+                </button>
+                <button id="turbo-confirm" class="turbo-modal-button turbo-modal-button--confirm" type="button"
+                    disabled>
+                    <span id="turbo-confirm-text">我知道了 (10s)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 礼物弹窗 -->
+    <div id="gift-overlay" class="gift-overlay" style="display: none;">
+        <div id="gift-box" class="gift-box">
+            <div class="gift-content">
+                <h2 id="gift-recipient" class="gift-recipient"></h2>
+                <p id="gift-message" class="gift-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

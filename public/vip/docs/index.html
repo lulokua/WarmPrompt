@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>说明文档 - WarmPrompt VIP</title>
+  <link rel="stylesheet" href="docs.css" />
+</head>
+
+<body>
+  <div class="bg-gradient"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="../" class="back-link">← 返回VIP套餐</a>
+      <h1 class="title">📋 说明文档</h1>
+      <p class="subtitle">了解 WarmPrompt VIP 服务详情</p>
+    </header>
+
+    <!-- Docs Content -->
+    <div class="docs-list">
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">⚡</div>
+          <h3>动态调整说明</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>是指系统通过算法实时分析用户的使用频率和时间分布，并根据使用行为动态调整限制阈值和恢复机制。高频、集中使用会触发更严格的限制，而分散、稳定的使用则会获得更宽松的使用空间。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🎵</div>
+          <h3>歌曲添加次数</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>网易云歌曲和QQ音乐歌曲的次数分别计算，互不影响。例如：标准版用户每日可添加30次网易云歌曲 + 30次QQ音乐歌曲。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🖼️</div>
+          <h3>多媒体上传</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>图片和视频上传次数独立计算。支持常见格式，单个文件大小限制：图片 10MB，视频 50MB。PRO MAX 用户无限制。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🖥️</div>
+          <h3>独立服务器</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>PRO MAX 用户可申请独立服务器部署，拥有专属资源和域名。独立服务器不受主站负载影响，适合高频使用场景。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🌐</div>
+          <h3>独立域名 + 微信</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>PRO MAX 用户可绑定自己的域名，并支持微信内直接访问（需备案域名）。让您的服务更加专业。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">💳</div>
+          <h3>开通方式</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>加入官方群联系群主，支持微信/支付宝付款，开通后立即生效。首次开通可享受新用户优惠。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🔔</div>
+          <h3>续费提醒</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>到期前3天会在群内提醒您续费，避免服务中断。续费用户可享受连续订阅优惠。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">🔄</div>
+          <h3>额度重置</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>所有每日额度在北京时间每天 00:00 自动重置。未使用的额度不会累积到下一天。</p>
+        </div>
+      </div>
+
+      <div class="docs-card">
+        <div class="docs-header" onclick="toggleCard(this)">
+          <div class="docs-icon">❓</div>
+          <h3>常见问题</h3>
+          <span class="docs-arrow">›</span>
+        </div>
+        <div class="docs-content">
+          <p>如遇到任何问题，请在官方群内联系群主或管理员。我们会在24小时内为您解答。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="groups">
+        <div class="group-item">
+          <span class="group-label">官方群</span>
+          <span class="group-number" onclick="copyNumber('243838604')">243838604</span>
+        </div>
+        <div class="group-divider"></div>
+        <div class="group-item">
+          <span class="group-label">充值群</span>
+          <span class="group-number" onclick="copyNumber('1060581114')">1060581114</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    function toggleCard(header) {
+      const card = header.parentElement;
+      card.classList.toggle('open');
+    }
+
+    function copyNumber(number) {
+      navigator.clipboard.writeText(number).then(() => {
+        showToast('已复制群号: ' + number);
+      }).catch(() => {
+        showToast('群号: ' + number);
+      });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

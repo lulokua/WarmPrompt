@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN" class="turbo-mode">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>意见反馈</title>
+  <script>
+    (function() {
+      try {
+        document.documentElement.classList.add('turbo-mode');
+        localStorage.setItem('turboMode', 'true');
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="feedback.css" />
+</head>
+
+<body class="page feedback-page">
+  <div class="aesthetic-bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <main class="layout feedback-layout">
+    <header class="feedback-topbar">
+      <div class="topbar-title">
+        <div class="topbar-eyebrow">WarmPrompt</div>
+        <div class="topbar-main">意见反馈</div>
+      </div>
+      <div class="topbar-actions">
+        <button id="feedback-back" class="topbar-button topbar-button--ghost" type="button">返回</button>
+        <button id="feedback-add" class="topbar-button" type="button">添加</button>
+      </div>
+    </header>
+
+    <section id="feedback-list-section" class="card feedback-card feedback-list-card">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">全部反馈</h2>
+          <p id="feedback-total" class="section-subtitle">共 0 条</p>
+        </div>
+      </div>
+
+      <div id="feedback-loading" class="feedback-loading">正在加载反馈...</div>
+      <div id="feedback-empty" class="feedback-empty">暂无反馈，点击右上角添加第一条反馈吧。</div>
+      <div id="feedback-list" class="feedback-list"></div>
+    </section>
+
+    <section id="feedback-form-section" class="card feedback-card feedback-form-card is-hidden">
+      <header class="feedback-form-header">
+        <div>
+          <h2 class="section-title">提交反馈</h2>
+          <p class="section-subtitle">感谢你的建议，我们会认真查看。</p>
+        </div>
+        <button id="feedback-cancel" class="ghost-button ghost-button--small" type="button">返回列表</button>
+      </header>
+
+      <form id="feedback-form" class="feedback-form" novalidate>
+        <div class="form-group">
+          <label class="form-label">反馈类型</label>
+          <div class="chip-group" role="radiogroup" aria-label="反馈类型">
+            <button class="chip is-active" type="button" role="radio" aria-checked="true" data-type="suggestion">
+              建议优化
+            </button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-type="bug">
+              Bug 报告
+            </button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-type="experience">
+              使用体验
+            </button>
+            <button class="chip" type="button" role="radio" aria-checked="false" data-type="other">
+              其他
+            </button>
+          </div>
+          <input type="hidden" id="feedback-type" name="type" value="suggestion" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="feedback-title">标题（选填）</label>
+          <input
+            id="feedback-title"
+            class="form-input"
+            type="text"
+            maxlength="100"
+            placeholder="一句话概括你的想法"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="feedback-content">详细描述</label>
+          <textarea
+            id="feedback-content"
+            class="form-textarea"
+            maxlength="2000"
+            rows="6"
+            required
+            placeholder="请描述发生了什么、你的期望或改进建议"
+          ></textarea>
+          <div class="emoji-toolbar">
+            <button class="emoji-toggle" type="button" data-target="feedback-content" aria-expanded="false">
+              😊 表情
+            </button>
+            <div class="emoji-panel" data-target="feedback-content" aria-hidden="true"></div>
+          </div>
+          <div class="field-meta">
+            <span class="field-hint">可写 2000 字以内</span>
+            <span id="content-count" class="field-count">0/2000</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">联系方式（选填）</label>
+          <div class="form-inline">
+            <select id="feedback-contact-type" class="form-select">
+              <option value="">选择类型</option>
+              <option value="qq">QQ</option>
+              <option value="wechat">微信</option>
+              <option value="phone">手机</option>
+              <option value="email">邮箱</option>
+              <option value="other">其他</option>
+            </select>
+            <input
+              id="feedback-contact"
+              class="form-input"
+              type="text"
+              maxlength="64"
+              placeholder="仅用于回访，可不填"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="feedback-device">设备型号（选填）</label>
+            <input
+              id="feedback-device"
+              class="form-input"
+              type="text"
+              maxlength="255"
+              placeholder="如 iPhone 14 / 小米 13"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="feedback-page">相关页面（选填）</label>
+            <input
+              id="feedback-page"
+              class="form-input"
+              type="text"
+              maxlength="255"
+              placeholder="自动识别，可修改"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button id="feedback-submit" class="submit-button" type="submit">提交反馈</button>
+          <button id="feedback-reset" class="ghost-button" type="button">清空内容</button>
+        </div>
+
+        <p class="form-hint">我们不会泄露你的信息，仅用于优化产品体验。</p>
+        <div id="feedback-status" class="feedback-status" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section id="feedback-detail" class="feedback-detail is-hidden" aria-hidden="true">
+      <div class="card feedback-card feedback-detail-card">
+        <header class="feedback-detail-header">
+          <button id="detail-back" class="ghost-button ghost-button--small" type="button">返回列表</button>
+          <div class="detail-actions">
+            <button id="detail-like" class="detail-like-button" type="button" aria-pressed="false">
+              ❤ <span id="detail-like-count">0</span>
+            </button>
+          </div>
+        </header>
+
+        <div id="detail-body" class="feedback-detail-body">
+          <div class="detail-feedback">
+            <div class="detail-feedback-head">
+              <span id="detail-type" class="feedback-badge">反馈</span>
+              <span id="detail-date" class="feedback-item-date"></span>
+            </div>
+            <div id="detail-title" class="feedback-item-title"></div>
+            <div id="detail-content" class="feedback-item-content"></div>
+            <div id="detail-meta" class="feedback-item-meta"></div>
+          </div>
+
+          <div class="detail-comments">
+            <div class="detail-comments-header">
+              <h3 class="section-title">评论</h3>
+              <span id="detail-comment-count" class="section-subtitle">共 0 条</span>
+            </div>
+            <div id="detail-comments-list" class="comment-list"></div>
+          </div>
+
+          <form id="detail-comment-form" class="comment-form" novalidate>
+            <div class="form-inline">
+              <input id="detail-comment-name" class="form-input" type="text" maxlength="32" placeholder="昵称（可选）" />
+              <button id="detail-comment-submit" class="submit-button submit-button--small" type="submit">
+                发送
+              </button>
+            </div>
+            <textarea id="detail-comment-input" class="form-textarea" rows="3" maxlength="500" placeholder="写下你的评论..."></textarea>
+            <div class="emoji-toolbar">
+              <button class="emoji-toggle" type="button" data-target="detail-comment-input" aria-expanded="false">
+                😊 表情
+              </button>
+              <div class="emoji-panel" data-target="detail-comment-input" aria-hidden="true"></div>
+            </div>
+            <div id="detail-comment-status" class="feedback-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="feedback.js"></script>
+</body>
+
+</html>

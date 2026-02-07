@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VIP 套餐 - WarmPrompt</title>
+  <link rel="stylesheet" href="vip.css" />
+</head>
+
+<body>
+  <div class="bg-gradient"></div>
+  
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <a href="../" class="back-link">← 返回首页</a>
+      <h1 class="title">选择您的会员方案</h1>
+      <p class="subtitle">加入官方群 <span class="highlight">243838604</span> 联系群主开通</p>
+    </header>
+
+    <!-- Docs Toggle Button -->
+    <a href="docs/" class="docs-toggle">
+      <span>📋</span>
+      <span>说明</span>
+    </a>
+
+    <!-- Cards Slider -->
+    <div class="slider-container">
+      <div class="slider" id="slider">
+        <!-- Card 1: 普通用户 -->
+        <div class="slide">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="plan-name">普通用户</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>0
+                </div>
+                <p class="period">免费</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value">2 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">1 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">1 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value">2 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+            </ul>
+            <button class="btn" disabled>当前方案</button>
+          </div>
+        </div>
+
+        <!-- Card 2: 体验卡 -->
+        <div class="slide">
+          <div class="card trial">
+            <div class="badge">体验</div>
+            <div class="card-header">
+              <h3 class="plan-name">体验卡</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>1
+                </div>
+                <p class="period">7天</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value">5 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">3 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">2 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value">2 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value">2 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value">4 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value">1 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+            </ul>
+            <button class="btn btn-trial" onclick="showInfo()">加群开通</button>
+          </div>
+        </div>
+
+        <!-- Card 3: VIP Air (原Card 2) -->
+        <div class="slide">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="plan-name">VIP Air</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>3
+                </div>
+                <p class="period">30天</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value">15 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">7 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">3 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value">5 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value">5 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value">10 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value">5 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+            </ul>
+            <button class="btn" onclick="showInfo()">加群开通</button>
+          </div>
+        </div>
+
+        <!-- Card 4: 标准版 (Featured) -->
+        <div class="slide">
+          <div class="card featured">
+            <div class="badge">推荐</div>
+            <div class="card-header">
+              <h3 class="plan-name">标准版</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>15
+                </div>
+                <p class="period">每月</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value">35 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">14 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">5 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value">30 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value">30 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value">25 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value">12 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+            </ul>
+            <button class="btn btn-primary" onclick="showInfo()">加群开通</button>
+          </div>
+        </div>
+
+        <!-- Card 5: PRO -->
+        <div class="slide">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="plan-name">PRO</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>35
+                </div>
+                <p class="period">每月</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value">80 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">30 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">8 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value">200 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value">200 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value">80 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value">40 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value muted">不可用</span>
+              </li>
+            </ul>
+            <button class="btn" onclick="showInfo()">加群开通</button>
+          </div>
+        </div>
+
+        <!-- Card 6: PRO MAX -->
+        <div class="slide">
+          <div class="card pro-max">
+            <div class="badge">旗舰</div>
+            <div class="card-header">
+              <h3 class="plan-name">PRO MAX</h3>
+              <div class="price-box">
+                <div class="price">
+                  <span class="currency">¥</span>88
+                </div>
+                <p class="period">每月</p>
+              </div>
+            </div>
+            <ul class="features">
+              <li class="feature-item">
+                <span class="feature-label">每日生成</span>
+                <span class="feature-value unlimited">无限</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">记录保留</span>
+                <span class="feature-value">30 天</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">访问页面次数限制</span>
+                <span class="feature-value">10 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加网易云歌曲</span>
+                <span class="feature-value">2000 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">添加QQ音乐歌曲</span>
+                <span class="feature-value">2000 次</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传图片</span>
+                <span class="feature-value unlimited">无限</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">上传视频</span>
+                <span class="feature-value unlimited">无限</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立域名+微信</span>
+                <span class="feature-value highlight">支持</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-label">独立服务器</span>
+                <span class="feature-value highlight">支持</span>
+              </li>
+            </ul>
+            <button class="btn btn-primary" onclick="showInfo()">加群开通</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dots Indicator -->
+      <div class="dots" id="dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+        <span class="dot" onclick="goToSlide(3)"></span>
+        <span class="dot" onclick="goToSlide(4)"></span>
+        <span class="dot" onclick="goToSlide(5)"></span>
+      </div>
+
+      <!-- Navigation Arrows (Desktop) -->
+      <button class="nav-btn prev" onclick="prevSlide()">‹</button>
+      <button class="nav-btn next" onclick="nextSlide()">›</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-text">所有套餐开通请联系官方群群主</p>
+      <div class="groups">
+        <div class="group-item">
+          <span class="group-label">官方群</span>
+          <span class="group-number" onclick="copyNumber('243838604')">243838604</span>
+        </div>
+        <div class="group-divider"></div>
+        <div class="group-item">
+          <span class="group-label">充值群</span>
+          <span class="group-number" onclick="copyNumber('1060581114')">1060581114</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Recharge Modal -->
+  <div id="rechargeModal" class="recharge-modal">
+    <div class="recharge-modal-content">
+      <button class="recharge-close" onclick="closeRechargeModal()">×</button>
+      <div class="recharge-icon">💳</div>
+      <h3 class="recharge-title">开通VIP会员</h3>
+      <p class="recharge-text">加入充值群联系群主进行开通</p>
+      <div class="recharge-group">
+        <span class="recharge-label">充值群号</span>
+        <span class="recharge-number" id="rechargeNumber">1060581114</span>
+      </div>
+      <button class="recharge-btn" onclick="copyRechargeNumber()">复制群号</button>
+    </div>
+  </div>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const dots = document.querySelectorAll('.dot');
+    let currentSlide = 0;
+    const totalSlides = 6;
+    let autoPlayTimer = null;
+    const AUTO_PLAY_DELAY = 4000;
+
+    function updateDots() {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      const slideWidth = slider.querySelector('.slide').offsetWidth;
+      slider.scrollTo({
+        left: slideWidth * currentSlide,
+        behavior: 'smooth'
+      });
+      updateDots();
+      resetAutoPlay();
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      goToSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      goToSlide(currentSlide);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setTimeout(() => {
+        nextSlide();
+      }, AUTO_PLAY_DELAY);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) {
+        clearTimeout(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+    }
+
+    function resetAutoPlay() {
+      stopAutoPlay();
+      startAutoPlay();
+    }
+
+    let scrollTimeout;
+    slider.addEventListener('scroll', () => {
+      resetAutoPlay();
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const slideWidth = slider.querySelector('.slide').offsetWidth;
+        const newSlide = Math.round(slider.scrollLeft / slideWidth);
+        if (newSlide !== currentSlide && newSlide >= 0 && newSlide < totalSlides) {
+          currentSlide = newSlide;
+          updateDots();
+        }
+      }, 50);
+    }, { passive: true });
+
+    startAutoPlay();
+
+    function showInfo() {
+      const modal = document.getElementById('rechargeModal');
+      modal.classList.add('show');
+      // 自动复制群号
+      const groupNumber = '1060581114';
+      navigator.clipboard.writeText(groupNumber).then(() => {
+        showToast('群号已自动复制: ' + groupNumber);
+      }).catch(() => {
+        showToast('请手动复制群号: ' + groupNumber);
+      });
+    }
+
+    function closeRechargeModal() {
+      const modal = document.getElementById('rechargeModal');
+      modal.classList.remove('show');
+    }
+
+    function copyRechargeNumber() {
+      const groupNumber = document.getElementById('rechargeNumber').textContent;
+      navigator.clipboard.writeText(groupNumber).then(() => {
+        showToast('已复制群号: ' + groupNumber);
+      }).catch(() => {
+        showToast('群号: ' + groupNumber);
+      });
+    }
+
+    // 点击模态框背景关闭
+    document.getElementById('rechargeModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeRechargeModal();
+      }
+    });
+
+    function copyNumber(number) {
+      navigator.clipboard.writeText(number).then(() => {
+        showToast('已复制群号: ' + number);
+      }).catch(() => {
+        showToast('群号: ' + number);
+      });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

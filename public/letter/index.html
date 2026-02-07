@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Connection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Manrope:wght@300;500&family=Noto+Serif+SC:wght@300;600&family=Noto+Sans+SC:wght@300;500&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="intro-overlay" id="intro">
+        <div class="intro-text">连接中....</div>
+    </div>
+
+    <!-- Settings Toggle -->
+    <button id="settings-toggle" class="icon-button settings-toggle" type="button" aria-label="设置" aria-expanded="false" aria-controls="settings-panel">
+        <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <path d="M449.194667 82.346667a128 128 0 0 1 125.610666 0l284.16 160a128 128 0 0 1 65.194667 111.530666v316.245334a128 128 0 0 1-65.194667 111.530666l-284.16 160a128 128 0 0 1-125.610666 0l-284.16-160a128 128 0 0 1-65.194667-111.530666V353.877333A128 128 0 0 1 165.034667 242.346667z m83.754666 74.410666a42.666667 42.666667 0 0 0-41.898666 0L206.933333 316.714667a42.666667 42.666667 0 0 0-21.76 37.162666v316.245334a42.666667 42.666667 0 0 0 21.76 37.162666l284.16 160a42.666667 42.666667 0 0 0 41.898667 0l284.16-160a42.666667 42.666667 0 0 0 21.76-37.162666V353.877333a42.666667 42.666667 0 0 0-21.76-37.162666zM512 341.333333a170.666667 170.666667 0 1 1 0 341.333334 170.666667 170.666667 0 0 1 0-341.333334z m0 85.333334a85.333333 85.333333 0 1 0 0 170.666666 85.333333 85.333333 0 0 0 0-170.666666z" fill="currentColor"></path>
+        </svg>
+    </button>
+    <div id="account-greeting" class="account-greeting" role="status" aria-live="polite"></div>
+    <div class="ambient-light">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="progress-container" id="progress">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+
+        <div class="form-wrapper">
+            <!-- Step 1 -->
+            <div class="step active" id="step-1">
+                <label class="question-label" for="username">首先，<br>你的名字是？</label>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="在此输入..." autocomplete="off" maxlength="7">
+                    <div class="char-count">0/7</div>
+                </div>
+                <button class="btn-next" onclick="nextStep(1)">
+                    下一步
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step" id="step-2">
+                <label class="question-label" for="friendname">你的朋友<br>叫什么名字？</label>
+                <div class="input-group">
+                    <input type="text" id="friendname" placeholder="朋友的名字..." autocomplete="off" maxlength="7">
+                    <div class="char-count">0/7</div>
+                </div>
+                <button class="btn-next" onclick="nextStep(2)">
+                    下一步
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step" id="step-3">
+                <label class="question-label">这封信，<br>想配首什么歌？</label>
+                
+                <div class="glass-panel">
+                    <!-- 音乐来源选择 -->
+                    <div class="music-source-options" id="music-source-options">
+                        <button class="music-source-btn selected" data-source="none" type="button">
+                            <span class="source-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M768 64c17.7 0 32 14.3 32 32v600.6a160 160 0 1 1-64-128.4V288L448 364.8V760.6a160 160 0 1 1-64-128.4V224c0-14.6 9.8-27.4 24-31l320-80c2.6-.7 5.3-1 8-1z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <span class="source-text">不使用音乐</span>
+                        </button>
+                        <button class="music-source-btn" data-source="netease" type="button">
+                            <span class="source-icon"><img
+                                    src="https://tse1-mm.cn.bing.net/th/id/OIP-C.cN62Hg6QUgQFdiaFSsksjAHaHL?w=186&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                    alt="网易云音乐" class="music-source-logo"></span>
+                            <span class="source-text">网易云音乐免费</span>
+                            <span class="vip-tag">免费</span>
+                        </button>
+                        <button class="music-source-btn" data-source="netease-login" type="button" disabled
+                            aria-disabled="true">
+                            <span class="source-icon"><img
+                                    src="https://tse1-mm.cn.bing.net/th/id/OIP-C.cN62Hg6QUgQFdiaFSsksjAHaHL?w=186&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                    alt="网易云音乐" class="music-source-logo"></span>
+                            <span class="source-text">网易云音乐VIP</span>
+                            <span class="vip-tag">登录后才可以使用</span>
+                        </button>
+                        <button class="music-source-btn" data-source="qq" type="button" disabled aria-disabled="true">
+                            <span class="source-icon"><img
+                                    src="https://tse2-mm.cn.bing.net/th/id/OIP-C.uJ7sNxhOc_V7zZc-vZtsbQAAAA?w=167&h=180&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                    alt="QQ音乐" class="music-source-logo"></span>
+                            <span class="source-text">QQ音乐</span>
+                            <span class="vip-tag">登录后才可以使用</span>
+                        </button>
+                    </div>
+
+                    <!-- 搜索区域 -->
+                    <div class="music-search-section" id="music-search-section" style="display: none;">
+                        <div class="input-group">
+                            <!-- <label for="music-search-input" class="input-label">搜索歌曲</label> -->
+                            <div class="search-input-wrapper">
+                                <input type="text" id="music-search-input" class="name-input" placeholder="输入歌曲名称..."
+                                    autocomplete="off" />
+                                <button id="music-search-btn" class="search-btn" type="button" aria-label="搜索">
+                                    <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M909.6 854.5L649.9 594.8C690.2 542.7 714 478.4 714 408c0-167.4-135.6-303-303-303S108 240.6 108 408s135.6 303 303 303c70.4 0 134.7-23.8 186.8-64.1l259.7 259.6c12.5 12.5 32.8 12.5 45.3 0l6.8-6.8c12.5-12.5 12.5-32.7 0-45.2zM411 651c-134.2 0-243-108.8-243-243s108.8-243 243-243 243 108.8 243 243-108.8 243-243 243z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 搜索结果 -->
+                        <div class="music-search-results" id="music-search-results">
+                            <!-- 搜索结果将由 JS 生成 -->
+                        </div>
+
+                        <!-- 已选歌曲预览 -->
+                        <div class="selected-music-preview" id="selected-music-preview" style="display: none;">
+                            <div class="music-preview-info">
+                                <img class="music-cover" id="preview-cover" src="" alt="封面">
+                                <div class="music-details">
+                                    <div class="music-title" id="preview-title">歌曲名</div>
+                                    <div class="music-artist" id="preview-artist">歌手</div>
+                                </div>
+                            </div>
+                            <div class="music-preview-controls">
+                                <button class="play-btn" id="preview-play-btn" type="button" aria-label="播放预览">
+                                    <svg class="icon play-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"
+                                            fill="currentColor" />
+                                    </svg>
+                                    <svg class="icon pause-icon" style="display:none;" viewBox="0 0 1024 1024"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M304 176h80v672h-80zM640 176h80v672h-80z" fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="remove-music-btn" id="remove-music-btn" type="button" aria-label="移除音乐">×</button>
+                            </div>
+                            <audio id="music-audio" style="display: none;"></audio>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="music-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="music-continue-button" class="continue-button" type="button">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step" id="step-4">
+                <label class="question-label">这首歌，<br>从哪里开始播放？</label>
+
+                <div class="glass-panel">
+                    <div class="music-source-options" id="playback-mode-options">
+                        <button class="music-source-btn selected" data-mode="full" type="button">
+                            <span class="source-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M719.4 499.1l-296.1-215A45.9 45.9 0 0 0 352 321.2v381.6a45.9 45.9 0 0 0 71.3 37.1l296.1-215a45.9 45.9 0 0 0 0-75.8z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="source-text">从头完整播放</span>
+                            <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                        </button>
+                        <button class="music-source-btn" data-mode="snippet" type="button">
+                            <span class="source-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                        fill="currentColor" />
+                                    <path d="M448 320h128v384h-128z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="source-text">指定开始时间</span>
+                        </button>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="playback-back-button" class="secondary-button" type="button">
+                            重新选歌
+                        </button>
+                        <button id="playback-continue-button" class="continue-button" type="button">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step" id="step-5">
+                <label class="question-label">选择开始时间</label>
+                
+                <div class="glass-panel">
+                    <div class="playback-full-info" id="playback-full-info">
+                        <div class="playback-full-title">从头完整播放</div>
+                        <div class="playback-full-desc">歌曲将从 00:00 开始播放。</div>
+                    </div>
+
+                    <div class="playback-snippet-controls" id="playback-snippet-controls" style="display: none;">
+                        <div class="input-group">
+                            <label for="snippet-slider" class="input-label">选择开始时间: <span
+                                    id="snippet-time-display">00:00</span></label>
+                            <input type="range" id="snippet-slider" class="range-slider" min="0" max="100" value="0"
+                                step="1">
+                            <div class="snippet-actions">
+                                <button id="snippet-preview-btn" class="secondary-button" type="button">
+                                    <span class="button-icon">
+                                        <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"
+                                                fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    试听开始时间
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="time-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="time-continue-button" class="continue-button" type="button">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step" id="step-6">
+                <label class="question-label">最后，<br>想写些什么？</label>
+                
+                <div class="glass-panel">
+                    <div class="music-source-options" id="content-options">
+                        <button class="music-source-btn" data-type="official" type="button">
+                            <span class="source-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                        fill="currentColor" />
+                                    <path d="M512 256v384l-128-128h256z" fill="currentColor" />
+                                    <path d="M352 512h320v64H352z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="source-text">官方内容</span>
+                            <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                        </button>
+                        <button class="music-source-btn" data-type="custom" type="button">
+                            <span class="source-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M880 832H144c-17.7 0-32-14.3-32-32v-48c0-17.7 14.3-32 32-32h736c17.7 0 32 14.3 32 32v48c0 17.7-14.3 32-32 32zM292.8 604.8l-156 39 39-156c2.8-11.3 8.8-21.6 17.2-29.6l444-444c16.4-16.4 43.6-16.4 60 0l116 116c16.4 16.4 16.4 43.6 0 60l-444 444c-8 8.8-18.4 14.4-29.6 17.2l-46.6-46.6z"
+                                        fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="source-text">自己写</span>
+                        </button>
+                    </div>
+
+                    <div id="custom-content-section" class="custom-content-section" style="display: none;">
+                        <div class="input-group">
+                            <label for="custom-content-text" class="input-label" style="display:none;">输入内容</label>
+                            <textarea id="custom-content-text" class="content-textarea" rows="5"
+                                placeholder="写下你想说的话... (换行可直接回车)"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="official-content-preview" class="official-content-preview" style="display: none;">
+                        <p class="preview-text"></p>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="content-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="content-continue-button" class="continue-button" type="button">
+                            <span class="button-text">下一步</span>
+                            <span class="button-icon">
+                                <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M352.032 912c-12.288 0-24.576-4.672-33.952-14.048-18.752-18.752-18.752-49.12 0-67.872L636.128 512 318.08 193.952c-18.752-18.752-18.752-49.12 0-67.872 18.752-18.752 49.12-18.752 67.872 0l351.968 352c18.752 18.72 18.752 49.12 0 67.872l-351.968 352C376.608 907.328 364.32 912 352.032 912z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step" id="step-7">
+                <label class="question-label">选择信件字体</label>
+
+                <div class="glass-panel">
+                    <div class="music-source-options" id="font-options">
+                        <button class="music-source-btn" data-font="hand" type="button">
+                            <span class="source-icon">笔</span>
+                            <span class="source-text">手写体</span>
+                        </button>
+                        <button class="music-source-btn selected" data-font="mi" type="button">
+                            <span class="source-icon">Mi</span>
+                            <span class="source-text">小米Bold字体</span>
+                            <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                        </button>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="font-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="font-continue-button" class="continue-button" type="button">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="step" id="step-8">
+                <label class="question-label">选择播放速度</label>
+
+                <div class="glass-panel">
+                    <div class="music-source-options" id="typing-speed-options">
+                        <button class="music-source-btn" data-speed="slow" type="button">
+                            <span class="source-icon">慢</span>
+                            <span class="source-text">慢速</span>
+                        </button>
+                        <button class="music-source-btn selected" data-speed="normal" type="button">
+                            <span class="source-icon">中</span>
+                            <span class="source-text">标准</span>
+                            <span class="vip-tag" style="background: var(--primary-color); color: #fff;">推荐</span>
+                        </button>
+                        <button class="music-source-btn" data-speed="fast" type="button">
+                            <span class="source-icon">快</span>
+                            <span class="source-text">快速</span>
+                        </button>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="typing-speed-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="typing-speed-continue-button" class="continue-button" type="button">
+                            下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step" id="step-9">
+                <label class="question-label">选择图片或视频</label>
+
+                <div class="glass-panel">
+                    <div class="music-source-options" id="media-options">
+                        <button class="music-source-btn selected" data-media="none" type="button">
+                            <span class="source-icon">无</span>
+                            <span class="source-text">不添加媒体</span>
+                        </button>
+                        <button class="music-source-btn" data-media="image" type="button">
+                            <span class="source-icon">图</span>
+                            <span class="source-text">选择图片</span>
+                            <span class="vip-tag">JPG/PNG</span>
+                        </button>
+                        <button class="music-source-btn" data-media="video" type="button">
+                            <span class="source-icon">影</span>
+                            <span class="source-text">选择视频</span>
+                            <span class="vip-tag">MP4</span>
+                        </button>
+                    </div>
+
+                    <input type="file" id="media-image-input" accept="image/*" style="display:none;">
+                    <input type="file" id="media-video-input" accept="video/*" style="display:none;">
+
+                    <div class="media-preview" id="media-preview" style="display:none;">
+                        <div class="media-preview-frame" id="media-preview-frame"></div>
+                        <div class="media-preview-meta">
+                            <div class="media-preview-name" id="media-preview-name">已选择媒体</div>
+                            <button class="remove-media-btn" id="media-remove-button" type="button" aria-label="移除媒体">×</button>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="media-back-button" class="secondary-button" type="button">
+                            上一步
+                        </button>
+                        <button id="online-preview-button" class="secondary-button" type="button">
+                            在线预览
+                        </button>
+                        <button id="media-continue-button" class="continue-button" type="button">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step Preview -->
+            <div class="step" id="step-preview">
+                <label class="question-label preview-label">在线预览</label>
+                <button id="preview-back-button" class="preview-back-button" type="button" aria-label="返回上一步">
+                    <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M604.8 192L256 512l348.8 320 64-64-243.2-224H896v-96H425.6l243.2-224-64-64z"
+                            fill="currentColor"></path>
+                    </svg>
+                    <span>上一步</span>
+                </button>
+
+                <div class="glass-panel preview-panel">
+                    <div class="preview-message">
+                        你好<span id="preview-user-name" class="preview-name">你</span>，你的朋友
+                        <span id="preview-friend-name" class="preview-name">TA</span>
+                        给你写了一封信，要不要打开？
+                    </div>
+                    <button id="hold-open-button" class="hold-button" type="button" aria-label="长按指纹打开">
+                        <svg class="fingerprint-icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M49.5 699.9c-7.6 0-14.4-5.3-16-13C3.1 542.4 3.4 429.7 34.3 352c3.3-8.4 12.8-12.5 21.3-9.2 8.4 3.3 12.5 12.9 9.2 21.3-28.5 71.7-28.2 178 0.8 316.1 1.9 8.9-3.8 17.6-12.7 19.4-1.1 0.2-2.3 0.3-3.4 0.3zM82.2 309C178.8 120.5 321.9 30.9 519.1 35.9c9.5 0.2 16.6-6.9 16.8-16 0.2-9.1-6.9-16.6-16-16.8C311.5-1.5 154.6 96 53 294c-4.1 8-1 17.9 7.1 22.1 2.4 1.2 4.9 1.8 7.5 1.8 5.9 0 11.7-3.2 14.6-8.9zM993 529.4c9-0.2 16.2-7.7 16-16.8C1002 225 856.7 54 577.1 4.2c-9-1.7-17.4 4.4-19 13.3-1.6 8.9 4.4 17.4 13.3 19 265.8 47.3 398.2 203.3 404.8 476.9 0.2 8.9 7.5 16 16.4 16h0.4zM119.3 804.5c22.6-57.2 22.9-130.9 0.7-218.9C90.3 468.2 149.4 286 299.5 184.5c7.5-5.1 9.5-15.3 4.4-22.8s-15.3-9.5-22.8-4.4c-162 109.6-225.4 307.9-193 436.3 20.5 81.2 20.7 148.2 0.7 198.9-3.3 8.4 0.8 17.9 9.2 21.3 2 0.8 4 1.2 6 1.2 6.6-0.1 12.7-4.1 15.3-10.5z m823.4-206c16.8-188.6-63.3-305.9-112.5-359-145-157.2-312.9-193.1-498.9-106.4-8.2 3.8-11.8 13.6-7.9 21.8 3.8 8.2 13.6 11.7 21.8 7.9 174.1-81 324.9-48.6 461 99C851.6 311 925.7 419.7 910 595.6c-0.8 9 5.9 17 14.9 17.8 0.5 0 1 0.1 1.5 0.1 8.3 0 15.5-6.4 16.3-15z m-14.1 167.8c25.3-97.2 14.9-133.6 13.7-137.4-2.8-8.5-11.8-12.9-20.3-10.4-8.5 2.6-13.3 11.7-10.9 20.3 0.1 0.3 8.5 32.2-14.1 119.3-2.3 8.8 3 17.7 11.7 20 1.4 0.4 2.8 0.5 4.1 0.5 7.2 0 13.8-4.9 15.8-12.3z m-767.1 96.8c45.3-53.3 60.9-141.4 46.2-261.8-10.1-82.8-13.3-235.1 78.4-325 62.6-61.3 160.2-83.1 289.9-64.7 9 1.3 17.3-5 18.5-13.9 1.3-9-5-17.3-13.9-18.5-140.5-19.9-247.3 4.8-317.5 73.7-101.7 99.7-98.8 263.5-87.9 352.3 13.5 110.9 0.5 190.5-38.7 236.6-5.9 6.9-5 17.2 1.9 23.1 3.1 2.6 6.8 3.9 10.6 3.9 4.6 0.1 9.3-1.9 12.5-5.7z m676.5 9.2c57.7-339.9-2.2-562.8-178.3-662.5-7.9-4.4-17.9-1.7-22.3 6.2-4.5 7.9-1.7 17.9 6.2 22.3C806.4 330.5 860.9 542 805.7 866.8c-1.5 8.9 4.5 17.4 13.4 18.9 0.9 0.1 1.8 0.2 2.8 0.2 7.8 0.1 14.8-5.6 16.1-13.6z m-610.9 45.5c34.2-45.9 51.5-92.9 51.5-139.6 0-9.1-7.3-16.4-16.4-16.4s-16.4 7.3-16.4 16.4c0 39.5-15.1 79.8-45 120-5.4 7.3-3.9 17.5 3.4 22.9 2.9 2.2 6.4 3.2 9.8 3.2 5 0.2 9.9-2.1 13.1-6.5z m62-192.3c14.9-57.2 15-120.6 0.2-188.4-0.2-1-0.5-1.9-0.9-2.8-13.7-32.8-11.7-100.4 15.6-156.9 15.1-31.3 44.1-71.6 96.7-86.4 132.3-37.3 222.8-10.1 284.8 85.6 4.9 7.6 15.1 9.8 22.7 4.8 7.6-4.9 9.8-15.1 4.8-22.7-70-107.9-175-140.4-321.2-99.3-50.9 14.3-91.5 50.2-117.3 103.7-32 66.4-32.6 143-16.9 182.3 13.4 62.2 13.4 120-0.2 171.7-2.3 8.8 3 17.7 11.7 20 1.4 0.4 2.8 0.5 4.1 0.5 7.4 0.2 14-4.7 15.9-12.1z m442.8 219.8c62.9-192.7 67.8-367.8 14.5-520.6-3-8.6-12.4-13.1-20.9-10.1-8.5 3-13.1 12.3-10.1 20.9 50.9 145.9 46 314-14.7 499.7-2.8 8.6 1.9 17.9 10.5 20.7 1.7 0.6 3.4 0.8 5.1 0.8 6.9-0.1 13.3-4.5 15.6-11.4z m-429.7 5.2c51.2-114.8 72.7-220.7 64.1-314.7-1.5-16.6-3.1-32.3-4.6-47.1-11.1-110.3-14.1-156 23.3-176.6 7.9-4.4 10.8-14.3 6.4-22.3-4.4-7.9-14.3-10.8-22.3-6.4-57.7 31.9-51.1 98.4-40 208.5 1.5 14.7 3 30.3 4.6 46.8 8.1 88.3-12.5 188.7-61.4 298.3-3.7 8.3 0 18 8.3 21.6 2.2 1 4.4 1.4 6.7 1.4 6.2 0.2 12.2-3.4 14.9-9.5z m325.7 55.7c32.1-39.4 86.8-259 74.1-421.7-17.3-122-54.6-197.9-113.9-232.1-46.1-26.6-104.3-26-173 1.7-8.4 3.4-12.5 12.9-9.1 21.3 3.4 8.4 12.9 12.4 21.3 9.1 58.9-23.8 107.5-25 144.4-3.8 49.4 28.5 82.3 98.6 97.7 207.3 12.2 157.1-42.5 367.4-66.9 397.4-5.7 7-4.7 17.3 2.4 23.1 3 2.5 6.7 3.7 10.3 3.7 4.8 0.1 9.5-2 12.7-6z m-252.5-20.8c57.9-120.2 87.2-218.3 87.2-291.4 0-32.1-4.6-65.9-9.1-98.6-11.9-86.4-15.9-139.9 27-155.4 15.4-5 38-7.7 58.5 8.4 28.4 22.4 59.4 85.5 45.4 258.9-0.7 9 6 16.9 15 17.7 9.1 0.6 16.9-6 17.7-15 12.2-150.8-7.3-247.4-57.8-287.2-33.5-26.4-70.1-20-89.4-13.7-71.4 25.8-59.9 109.7-48.8 190.8 4.3 31.6 8.8 64.3 8.8 94.1 0 68.2-28.3 161.4-84 277.2-3.9 8.1-0.5 17.9 7.7 21.9 2.3 1.1 4.7 1.6 7.1 1.6 6-0.1 11.9-3.5 14.7-9.3z m171.1 29.3c18-16.5 43.7-61 59.8-256.1 0.7-9-6-16.9-15-17.7-9.1-0.7-16.9 6-17.7 15-14.7 178.2-37.2 223.5-49.3 234.6-6.7 6.1-7.1 16.5-1 23.2 3.2 3.5 7.6 5.3 12.1 5.3 3.9 0 7.9-1.4 11.1-4.3z m-38.1-147c47-137.9 48.7-265 5-377.7-3.3-8.4-12.8-12.6-21.2-9.4-8.4 3.3-12.6 12.8-9.3 21.2 40.8 105.3 39 224.8-5.4 355.3-2.9 8.6 1.7 17.9 10.2 20.8 1.8 0.6 3.5 0.9 5.3 0.9 6.7 0 13.1-4.3 15.4-11.1z m-46.5 133c5.7-8.4 14.6-26.7 26.1-89.6 1.6-8.9-4.3-17.4-13.2-19.1-8.9-1.7-17.4 4.3-19.1 13.2-10.4 57.1-18.1 72.8-20.9 77-5.1 7.5-3.2 17.7 4.3 22.8 2.8 1.9 6 2.8 9.2 2.8 5.3 0 10.4-2.5 13.6-7.1z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </button>
+                    <div class="hold-hint" id="hold-hint">长按指纹开启</div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="step result-view letter-view" id="step-result">
+                <button id="result-back-button" class="result-back-button" type="button" aria-label="返回上一步">
+                    <svg class="icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M604.8 192L256 512l348.8 320 64-64-243.2-224H896v-96H425.6l243.2-224-64-64z"
+                            fill="currentColor"></path>
+                    </svg>
+                    <span>上一步</span>
+                </button>
+                <div class="result-stack" id="result-stack">
+                    <div class="letter-paper">
+                        <div class="letter-recipient">
+                            <span class="letter-name" id="display-user"></span>：
+                        </div>
+                        <div class="letter-body" id="display-message"></div>
+                        <div class="letter-signature">
+                            <span class="letter-name" id="display-friend"></span>
+                        </div>
+                    </div>
+                    <div class="media-card" id="media-card" aria-hidden="true">
+                        <div class="media-frame" id="media-frame"></div>
+                    </div>
+                </div>
+                <div class="result-toggle" id="result-toggle">
+                    <button id="result-toggle-button" class="secondary-button" type="button" aria-pressed="false">
+                        查看图片
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-overlay" class="overlay" aria-hidden="true"></div>
+    <aside id="settings-panel" class="settings-panel" role="dialog" aria-label="设置" aria-hidden="true" inert>
+        <div class="panel-header">
+            <h3 class="panel-title">设置</h3>
+            <button id="settings-close" class="icon-button icon-button--small" type="button" aria-label="关闭设置">
+                ×
+            </button>
+        </div>
+        <div class="panel-body">
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">主题</div>
+                    <div id="theme-label" class="setting-value">浅色模式</div>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+                    <span id="theme-thumb" class="theme-thumb"></span>
+                </button>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">返回主页</div>
+                    <div class="setting-value">回到 WarmPrompt</div>
+                </div>
+                <a href="../index.html" class="icon-button icon-button--small" style="text-decoration:none; display:flex; justify-content:center; align-items:center;">
+                    <svg viewBox="0 0 1024 1024" width="16" height="16" fill="currentColor"><path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c0 35.2 28.7 63.9 63.9 63.9h43.9V915a63.9 63.9 0 0 0 63.9 63.9h579.8a63.9 63.9 0 0 0 63.9-63.9V614.9h43.9c35.2 0 63.9-28.7 63.9-63.9 0-17-6.8-33.2-18.8-46zM800 500v400H224V500h-66l354-354 354 354h-66z"/></svg>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <script src="script.js"></script>
+</body>
+</html>

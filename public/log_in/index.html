@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>账号登录 - WarmPrompt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Ambient Background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <main class="shell">
+    <header class="brand-header">
+      <div class="brand-pill">
+        <span class="brand-name">WarmPrompt</span>
+        <span class="brand-sep"></span>
+        <span class="brand-ctx">会员登录</span>
+      </div>
+      <h1 class="hero-title">欢迎回来</h1>
+      <p class="hero-subtitle">请输入管理员分发的账号 ID 登录。</p>
+    </header>
+
+    <!-- Login Card -->
+    <section class="card" id="loginCard">
+      <form class="form" id="loginForm">
+        <div class="form-group">
+          <label class="label" for="accountId">账号 ID</label>
+          <div class="input-container">
+            <input id="accountId" class="input-field" type="text" name="accountId" autocomplete="username"
+              placeholder="例如：AIR-8821" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="label" for="password">密码</label>
+          <div class="input-container">
+            <input id="password" class="input-field" type="password" name="password" autocomplete="current-password"
+              placeholder="••••••••" required />
+            <button class="input-action-btn" id="togglePassword" type="button" aria-label="显示密码">显示</button>
+          </div>
+        </div>
+
+        <div class="feedback-msg" id="formFeedback" role="status" aria-live="polite"></div>
+
+        <button class="btn-primary" id="loginBtn" type="submit">立即登录</button>
+      </form>
+
+      <p class="form-hint">遇到问题？请联系管理员重置密码。</p>
+    </section>
+
+    <!-- Result Card -->
+    <section class="card is-hidden" id="resultCard">
+      <div class="result-header">
+        <span class="level-badge level-pill--air" id="levelPill">VIP Air</span>
+        <h2 class="user-welcome" id="userTitle">Login Success</h2>
+        <p class="hero-subtitle" id="userSubtitle">权益已激活</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">当前账号</span>
+          <span class="info-value" id="metaAccount">AIR-0000</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">有效期至</span>
+          <span class="info-value" id="metaExpire">2099-12-31</span>
+        </div>
+      </div>
+
+      <div class="benefits-section">
+        <span class="section-label">可用权益</span>
+        <div class="benefits-list" id="benefitGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="activity-section">
+        <span class="section-label">今日生成</span>
+        <div class="info-grid info-grid--compact">
+          <div class="info-item">
+            <span class="info-label">总次数</span>
+            <span class="info-value" id="todayTotal">0</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">礼物/信件</span>
+            <span class="info-value" id="todayBreakdown">0 / 0</span>
+          </div>
+        </div>
+
+        <div class="info-grid info-grid--compact info-grid--secondary">
+          <div class="info-item">
+            <span class="info-label">单条访问剩余上限</span>
+            <span class="info-value" id="planAccess">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">记录保留剩余天数</span>
+            <span class="info-value" id="planRetention">-</span>
+          </div>
+        </div>
+
+        <div class="share-list" id="shareList"></div>
+        <div class="empty-hint is-hidden" id="shareEmpty">今天还没有生成记录</div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn-ghost" id="logoutBtn" type="button">退出</button>
+        <button class="btn-primary" id="homeBtn" type="button">进入主页</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

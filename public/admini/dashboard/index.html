@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>管理控制台 - WarmPrompt</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- 立即检查登录状态，防止未登录用户看到页面 -->
+    <script>
+        (function () {
+            var token = localStorage.getItem('admin_token');
+            var expires = localStorage.getItem('admin_expires');
+
+            // 没有 token 或已过期，立即跳转
+            if (!token || (expires && Date.now() > parseInt(expires))) {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_username');
+                localStorage.removeItem('admin_expires');
+                window.location.replace('/admini/');
+            }
+        })();
+    </script>
+
+    <!-- 加载状态遮罩 -->
+    <div id="authLoader"
+        style="position:fixed;inset:0;background:#f7f8fb;z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+            <div
+                style="width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;">
+            </div>
+            <p style="color:#64748b;font-size:14px;">正在验证登录状态...</p>
+        </div>
+        <style>
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg)
+                }
+            }
+        </style>
+    </div>
+
+    <div class="dashboard-page">
+        <header class="dashboard-header">
+            <div class="header-brand">
+                <div class="brand-pill">WarmPrompt</div>
+                <span class="header-title">管理控制台</span>
+            </div>
+            <div class="header-actions">
+                <span class="user-info" id="userInfo">管理员</span>
+                <button class="logout-button" id="logoutBtn" type="button">退出登录</button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="welcome">
+                <h1 class="welcome-title">欢迎回来，<span id="welcomeName">管理员</span></h1>
+                <p class="welcome-subtitle">请选择需要执行的操作</p>
+            </section>
+
+            <section class="module-grid" aria-label="账号模块">
+                <article class="module-card module-card--trial">
+                    <div class="module-header">
+                        <h2 class="module-title">体验卡账号</h2>
+                        <span class="module-tag">体验</span>
+                    </div>
+                    <p class="module-desc">生成 7 天体验卡授权账号</p>
+                    <div class="module-meta">
+                        <span class="module-meta-label">已生成</span>
+                        <span class="module-meta-value" id="countTrial">0</span>
+                    </div>
+                    <div class="module-actions">
+                        <button class="module-button module-button--primary" id="addTrial" type="button">生成账号</button>
+                        <button class="module-button" id="historyTrial" type="button">查看记录</button>
+                    </div>
+                </article>
+
+                <article class="module-card module-card--air">
+                    <div class="module-header">
+                        <h2 class="module-title">Air 账号</h2>
+                        <span class="module-tag">AIR</span>
+                    </div>
+                    <p class="module-desc">生成轻量级 Air 版本授权账号</p>
+                    <div class="module-meta">
+                        <span class="module-meta-label">已生成</span>
+                        <span class="module-meta-value" id="countAir">0</span>
+                    </div>
+                    <div class="module-actions">
+                        <button class="module-button module-button--primary" id="addAir" type="button">生成账号</button>
+                        <button class="module-button" id="historyAir" type="button">查看记录</button>
+                    </div>
+                </article>
+
+                <article class="module-card module-card--pro">
+                    <div class="module-header">
+                        <h2 class="module-title">Pro 账号</h2>
+                        <span class="module-tag">PRO</span>
+                    </div>
+                    <p class="module-desc">生成专业版 Pro 授权账号</p>
+                    <div class="module-meta">
+                        <span class="module-meta-label">已生成</span>
+                        <span class="module-meta-value" id="countPro">0</span>
+                    </div>
+                    <div class="module-actions">
+                        <button class="module-button module-button--primary" id="addPro" type="button">生成账号</button>
+                        <button class="module-button" id="historyPro" type="button">查看记录</button>
+                    </div>
+                </article>
+
+                <article class="module-card module-card--standard">
+                    <div class="module-header">
+                        <h2 class="module-title">标准版账号</h2>
+                        <span class="module-tag">标准</span>
+                    </div>
+                    <p class="module-desc">生成标准版授权账号</p>
+                    <div class="module-meta">
+                        <span class="module-meta-label">已生成</span>
+                        <span class="module-meta-value" id="countStandard">0</span>
+                    </div>
+                    <div class="module-actions">
+                        <button class="module-button module-button--primary" id="addStandard"
+                            type="button">生成账号</button>
+                        <button class="module-button" id="historyStandard" type="button">查看记录</button>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <span>WarmPrompt v5.0 管理控制台</span>
+            <span class="footer-separator">|</span>
+            <span id="currentTime"></span>
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+        <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">账号生成</h2>
+                <button class="modal-close" id="modalClose" type="button" aria-label="关闭">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
