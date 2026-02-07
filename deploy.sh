@@ -482,150 +482,91 @@ download_project() {
 install_dependencies() {
     print_header "安装系统依赖"
 
-    # 安装基础工具
-    run_with_spinner "更新软件包列表" "apt-get update -y"
-    echo ""
-
     # 确保 curl 可用
     if ! command -v curl &>/dev/null; then
         run_with_spinner "安装 curl" "apt-get install -y curl"
     fi
 
-    # 状态目录
-    local status_dir="/tmp/warmprompt_status_$$"
-    rm -rf "$status_dir" && mkdir -p "$status_dir"
+    # ---- 检测已安装的软件 ----
+    local need_mysql=true
+    local need_nginx=true
+    local need_nodejs=true
 
-    # ---- 后台并行安装 ----
+    if dpkg -l 2>/dev/null | grep -q "ii  mysql-server "; then
+        need_mysql=false
+        log_ok "MySQL 8.0            ${DIM}已存在，跳过${NC}"
+    fi
+    if dpkg -l 2>/dev/null | grep -q "ii  nginx "; then
+        need_nginx=false
+        log_ok "Nginx                ${DIM}已存在，跳过${NC}"
+    fi
+    local current_node_ver
+    current_node_ver=$(node --version 2>/dev/null | tr -d 'v' | cut -d. -f1)
+    if [[ -n "$current_node_ver" ]] && [[ "$current_node_ver" -ge "$NODE_MAJOR" ]]; then
+        need_nodejs=false
+        log_ok "Node.js ${NODE_MAJOR}.x          ${DIM}已存在，跳过${NC}"
+    fi
 
-    # MySQL
-    (
-        echo "running" > "$status_dir/mysql"
-        if dpkg -l 2>/dev/null | grep -q "ii  mysql-server "; then
-            echo "skipped" > "$status_dir/mysql"
-        else
-            if DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server >> "$LOG_FILE" 2>&1; then
-                systemctl enable mysql >> "$LOG_FILE" 2>&1
-                systemctl start mysql >> "$LOG_FILE" 2>&1
-                echo "done" > "$status_dir/mysql"
-            else
-                echo "failed" > "$status_dir/mysql"
-            fi
-        fi
-    ) &
-    local pid_mysql=$!
-
-    # Nginx
-    (
-        echo "running" > "$status_dir/nginx"
-        if dpkg -l 2>/dev/null | grep -q "ii  nginx "; then
-            echo "skipped" > "$status_dir/nginx"
-        else
-            if DEBIAN_FRONTEND=noninteractive apt-get install -y nginx >> "$LOG_FILE" 2>&1; then
-                systemctl enable nginx >> "$LOG_FILE" 2>&1
-                echo "done" > "$status_dir/nginx"
-            else
-                echo "failed" > "$status_dir/nginx"
-            fi
-        fi
-    ) &
-    local pid_nginx=$!
-
-    # Node.js
-    (
-        echo "running" > "$status_dir/nodejs"
-        local current_ver
-        current_ver=$(node --version 2>/dev/null | tr -d 'v' | cut -d. -f1)
-        if [[ -n "$current_ver" ]] && [[ "$current_ver" -ge "$NODE_MAJOR" ]]; then
-            echo "skipped" > "$status_dir/nodejs"
-        else
-            if curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash - >> "$LOG_FILE" 2>&1 && \
-               DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs >> "$LOG_FILE" 2>&1; then
-                echo "done" > "$status_dir/nodejs"
-            else
-                echo "failed" > "$status_dir/nodejs"
-            fi
-        fi
-    ) &
-    local pid_nodejs=$!
-
-    # ---- 并行进度显示 ----
-    printf "\033[?25l" # 隐藏光标
-
-    local spin_idx=0
-    local all_done=false
-    local first_draw=true
-
-    while ! $all_done; do
-        local s_mysql s_nginx s_nodejs
-        s_mysql=$(cat "$status_dir/mysql" 2>/dev/null || echo "running")
-        s_nginx=$(cat "$status_dir/nginx" 2>/dev/null || echo "running")
-        s_nodejs=$(cat "$status_dir/nodejs" 2>/dev/null || echo "running")
-
-        local d_mysql d_nginx d_nodejs
-        local sc="${SPINNER_CHARS[$spin_idx]}"
-
-        # MySQL 状态行
-        case "$s_mysql" in
-            running)  d_mysql="  ${CYAN}${sc}${NC}  MySQL 8.0            ${DIM}安装中...${NC}     " ;;
-            done)     d_mysql="  ${SYM_OK}  MySQL 8.0            ${GREEN}安装完成${NC}     " ;;
-            skipped)  d_mysql="  ${SYM_OK}  MySQL 8.0            ${DIM}已存在，跳过${NC} " ;;
-            failed)   d_mysql="  ${SYM_FAIL}  MySQL 8.0            ${RED}安装失败${NC}     " ;;
-        esac
-
-        # Nginx 状态行
-        case "$s_nginx" in
-            running)  d_nginx="  ${CYAN}${sc}${NC}  Nginx                ${DIM}安装中...${NC}     " ;;
-            done)     d_nginx="  ${SYM_OK}  Nginx                ${GREEN}安装完成${NC}     " ;;
-            skipped)  d_nginx="  ${SYM_OK}  Nginx                ${DIM}已存在，跳过${NC} " ;;
-            failed)   d_nginx="  ${SYM_FAIL}  Nginx                ${RED}安装失败${NC}     " ;;
-        esac
-
-        # Node.js 状态行
-        case "$s_nodejs" in
-            running)  d_nodejs="  ${CYAN}${sc}${NC}  Node.js ${NODE_MAJOR}.x          ${DIM}安装中...${NC}     " ;;
-            done)     d_nodejs="  ${SYM_OK}  Node.js ${NODE_MAJOR}.x          ${GREEN}安装完成${NC}     " ;;
-            skipped)  d_nodejs="  ${SYM_OK}  Node.js ${NODE_MAJOR}.x          ${DIM}已存在，跳过${NC} " ;;
-            failed)   d_nodejs="  ${SYM_FAIL}  Node.js ${NODE_MAJOR}.x          ${RED}安装失败${NC}     " ;;
-        esac
-
-        # 绘制
-        if $first_draw; then
-            first_draw=false
-        else
-            printf "\033[3A" # 上移 3 行
-        fi
-
-        echo -e "$d_mysql"
-        echo -e "$d_nginx"
-        echo -e "$d_nodejs"
-
-        spin_idx=$(( (spin_idx + 1) % ${#SPINNER_CHARS[@]} ))
-
-        # 全部完成?
-        if [[ "$s_mysql" != "running" ]] && [[ "$s_nginx" != "running" ]] && [[ "$s_nodejs" != "running" ]]; then
-            all_done=true
-        else
-            sleep 0.15
-        fi
-    done
-
-    printf "\033[?25h" # 显示光标
-
-    # 等待后台进程
-    wait "$pid_mysql" 2>/dev/null || true
-    wait "$pid_nginx" 2>/dev/null || true
-    wait "$pid_nodejs" 2>/dev/null || true
-
-    # 检查失败
-    local s_mysql s_nginx s_nodejs
-    s_mysql=$(cat "$status_dir/mysql" 2>/dev/null || echo "unknown")
-    s_nginx=$(cat "$status_dir/nginx" 2>/dev/null || echo "unknown")
-    s_nodejs=$(cat "$status_dir/nodejs" 2>/dev/null || echo "unknown")
-
-    if [[ "$s_mysql" == "failed" ]] || [[ "$s_nginx" == "failed" ]] || [[ "$s_nodejs" == "failed" ]]; then
+    # 如果有需要安装的包
+    if $need_mysql || $need_nginx || $need_nodejs; then
         echo ""
-        log_fail "部分依赖安装失败，请查看日志: ${BOLD}${LOG_FILE}${NC}"
-        exit 1
+
+        # 更新包列表
+        run_with_spinner "更新软件包列表" "apt-get update -y"
+
+        # 如果需要 Node.js，先添加 NodeSource 源
+        if $need_nodejs; then
+            run_with_spinner "添加 Node.js ${NODE_MAJOR}.x 软件源" \
+                "curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash -"
+        fi
+
+        # 构建安装包列表
+        local packages=""
+        $need_mysql && packages="$packages mysql-server"
+        $need_nginx && packages="$packages nginx"
+        $need_nodejs && packages="$packages nodejs"
+
+        # 一条命令安装所有需要的包（避免 apt 锁冲突）
+        run_with_spinner "安装${packages}" \
+            "DEBIAN_FRONTEND=noninteractive apt-get install -y $packages"
+
+        echo ""
+
+        # 验证并启动服务
+        if $need_mysql; then
+            if command -v mysql &>/dev/null; then
+                systemctl enable mysql >> "$LOG_FILE" 2>&1 || true
+                systemctl start mysql >> "$LOG_FILE" 2>&1 || true
+                log_ok "MySQL 8.0            ${GREEN}安装完成${NC}"
+            else
+                log_fail "MySQL 8.0            ${RED}安装失败${NC}"
+                log_fail "请查看日志: ${BOLD}${LOG_FILE}${NC}"
+                exit 1
+            fi
+        fi
+
+        if $need_nginx; then
+            if command -v nginx &>/dev/null; then
+                systemctl enable nginx >> "$LOG_FILE" 2>&1 || true
+                log_ok "Nginx                ${GREEN}安装完成${NC}"
+            else
+                log_fail "Nginx                ${RED}安装失败${NC}"
+                log_fail "请查看日志: ${BOLD}${LOG_FILE}${NC}"
+                exit 1
+            fi
+        fi
+
+        if $need_nodejs; then
+            if command -v node &>/dev/null; then
+                local installed_ver
+                installed_ver=$(node --version 2>/dev/null)
+                log_ok "Node.js ${installed_ver:-?}        ${GREEN}安装完成${NC}"
+            else
+                log_fail "Node.js              ${RED}安装失败${NC}"
+                log_fail "请查看日志: ${BOLD}${LOG_FILE}${NC}"
+                exit 1
+            fi
+        fi
     fi
 
     # 安装 PM2
@@ -635,9 +576,6 @@ install_dependencies() {
     echo ""
     log_ok "${GREEN}所有依赖安装完成${NC}"
     echo ""
-
-    # 清理
-    rm -rf "$status_dir"
 }
 
 # ══════════════════════ 配置数据库 ══════════════════════
